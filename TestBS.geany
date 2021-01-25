@@ -1,0 +1,67 @@
+[editor]
+line_wrapping=false
+line_break_column=72
+auto_continue_multiline=true
+
+[file_prefs]
+final_new_line=true
+ensure_convert_new_lines=false
+strip_trailing_spaces=false
+replace_tabs=false
+
+[indentation]
+indent_width=4
+indent_type=1
+indent_hard_tab_width=8
+detect_indent=true
+detect_indent_width=true
+indent_mode=2
+
+[project]
+name=TestBS
+base_path=/home/pi/projects/TestBS/
+description=
+file_patterns=
+
+[long line marker]
+long_line_behaviour=1
+long_line_column=72
+
+[files]
+current_page=16
+FILE_NAME_0=255;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FSensors.cpp;0;4
+FILE_NAME_1=236;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FSensors.h;0;4
+FILE_NAME_2=439;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FmainBS.h;0;4
+FILE_NAME_3=44;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FMotorsBS.cpp;0;4
+FILE_NAME_4=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FMotorsBS.h;0;4
+FILE_NAME_5=919;C++;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2Ftest.cpp;0;2
+FILE_NAME_6=314;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FPosition.h;0;4
+FILE_NAME_7=162;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FPosition.cpp;0;4
+FILE_NAME_8=444;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FAsserv.h;0;4
+FILE_NAME_9=2271;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FAsserv.cpp;0;4
+FILE_NAME_10=152;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FRobot.h;0;4
+FILE_NAME_11=476;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FRobot.cpp;0;4
+FILE_NAME_12=146;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FIA.h;0;4
+FILE_NAME_13=54;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FIA.cpp;0;4
+FILE_NAME_14=150;Make;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FMakefile;0;4
+FILE_NAME_15=83;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FUtils.h;0;4
+FILE_NAME_16=710;C++;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FBrickPi3.cpp;0;2
+FILE_NAME_17=6379;C++;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FBrickPi3.h;0;2
+
+[VTE]
+last_dir=/home/pi
+
+[build-menu]
+CFT_01_LB=_Build
+CFT_01_CM=g++ -Wall -o "%e" "%f"
+CFT_01_WD=
+filetypes=C;C++;
+C++FT_00_LB=_Compile
+C++FT_00_CM=g++  -c "%f"
+C++FT_00_WD=
+NF_03_LB=Make Clean
+NF_03_CM=make clean
+NF_03_WD=
+NF_01_LB=Make Custom _Target...
+NF_01_CM=make 
+NF_01_WD=

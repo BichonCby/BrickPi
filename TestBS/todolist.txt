@@ -1,0 +1,19 @@
+A coder 
+
+différents type de déplacement
+détection
+capteurs contact
+communication debug
+log
+actions
+fichier de config
+sémaphores pour les types de déplacement
+
+A tester
+
+pilotage manuel des roues
+codeurs Lego
+compteur temporel
+différents actionneurs
+contacteurs (tirette, BAU, couleur)
+
