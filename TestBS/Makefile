@@ -1,5 +1,5 @@
 CC=g++
-EXEC = test
+EXEC = test.out
 SRC=$(wildcard *.cpp)
 OBJ=$(SRC:.cpp=.o)
 LDFLAGS = -lpthread

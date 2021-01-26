@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "Config.h"
 #include "Utils.h"
 #include "BrickPi3.h"
 #include "MotorsBS.h"
@@ -23,4 +24,5 @@ extern Position Pos;
 extern Asserv Ass;
 extern Robot Rob;
 extern IA MyIA;
+extern Config Conf;
 #endif

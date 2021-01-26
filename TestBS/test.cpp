@@ -1,6 +1,7 @@
 /* permier test avec Brickpi */
 
 #include "mainBS.h"
+Config Conf;
 BrickPi3 BP;
 Sensors Sen;
 MotorsBS Mot;
@@ -27,11 +28,12 @@ void *stopstart( void*)
         sleepms(100); // boucle 100ms
     }
     // on lance la tempo 
-    while (Rob.getCounter() < 1000 && !BAU)
+    while (Rob.getCounter() < DURATION_MATCH && !BAU)
     {
       Rob.incCounter();
       sleepms(100); // boucle 100ms
     }
+    Rob.setStateMatch(MATCH_END); // en fait ça sera funny ou display
    // return;
 }
 sensor_ultrasonic_t sonar;
@@ -60,10 +62,11 @@ void * seq20ms(void *)
     //}else{
     //  printf("Ultrasonic sensor (S1): CM %5.1f Inches %5.1f  \n", sonar.cm, sonar.inch);
     //}
-    printf(" %5.1f cm \n", Sen.getSonar(PORT_1));
+    
+    //printf(" %5.1f cm \n", Sen.getSonar(PORT_1));
     //std::cout << ;
     //   Sen.getEncoder(1,2);
-    std::cout << ".";
+    std::cout << ".";//Rob.getCounter();
     fflush(stdout);
 
     Mot.setMotorPower(1,30);
@@ -74,19 +77,22 @@ void * seq20ms(void *)
     Ass.calcAsserv();
     seqRun = false; 
 }
+
 int main(int argc, char **argv)
 {
   pthread_t seq;
   pthread_t stt; // stop and stop du robot
   pthread_t stra; // strategie, en parallèle de la sequence20ms
   std::cout << "Debut du programme\n";  
+//  return 0;
+    sleepms(1000); //20ms c'est le temps de la séquence
   BP.detect(); // Make sure that the BrickPi3 is communicating and that the firmware is compatible with the drivers.
   pthread_create(&stt,NULL,&stopstart,NULL);
   pthread_create(&stra,NULL,&strategy,NULL);
   
   //BP.set_sensor_type(PORT_1, SENSOR_TYPE_NXT_ULTRASONIC);
 
-  for (int i=0;i<10;i++)
+  while (Rob.getStateMatch() != MATCH_END)
   {
     //std::thread t1(seq20ms);
     pthread_create(&seq,NULL,&seq20ms,NULL);

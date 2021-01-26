@@ -10,7 +10,13 @@ float modulo180(float angle)
 	return angle;
 }
 Position::Position()
-{}
+{
+		Conf.getConfig((char *)("COEFF_SPD_FOR"), &COEFF_SPD_FOR);
+		Conf.getConfig((char *)("COEFF_SPD_ROT"), &COEFF_SPD_ROT);
+		Conf.getConfig((char *)("COEFF_ANG"), &COEFF_ANG);
+		Conf.getConfig((char *)("COEFF_MM"), &COEFF_MM);
+		//printf("%d mon coeff est %f\n",i,COEFF_SPD_FOR); 
+}
 
 int Position::initPosition(void) // voir si on l'intègre dans le constructeur
 {

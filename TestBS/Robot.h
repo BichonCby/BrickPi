@@ -1,5 +1,6 @@
 #ifndef __Robot_h__
 #define __Robot_h__
+#define DURATION_MATCH 1000 // en 100 ms
 
 #define GREEN 0
 #define BLUE 1

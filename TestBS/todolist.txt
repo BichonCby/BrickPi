@@ -13,7 +13,7 @@ A tester
 
 pilotage manuel des roues
 codeurs Lego
-compteur temporel
+compteur temporel ==> OK
 différents actionneurs
 contacteurs (tirette, BAU, couleur)
 
