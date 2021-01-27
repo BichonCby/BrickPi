@@ -5,8 +5,8 @@ détection
 capteurs contact
 communication debug
 log
-actions
-fichier de config
+//actions
+//fichier de config
 sémaphores pour les types de déplacement
 
 A tester

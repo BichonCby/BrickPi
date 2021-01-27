@@ -8,10 +8,6 @@
 #define ASS_ROTATION 3
 #define ASS_MANUAL 4
 
-#define DIST_CONVERGE 10 // en mm
-#define ANGLE_CONVERGE 10 // en degré
-#define KP_FOR 1
-#define KP_ROT 1
 
 class Asserv{
 public:
@@ -22,6 +18,10 @@ void goForward(int x, int y, int speed);
 void turn(int a, int speed);
 
 private:
+float DIST_CONVERGE = 10; // en mm
+float ANGLE_CONVERGE = 10; // en degré
+float KP_FOR = 1;
+float KP_ROT = 1;
 void generateVirtualSpeed(void);
 void driveWheels(void);
 float targetX;

@@ -16,6 +16,7 @@
 #include "Asserv.h"
 #include "Robot.h"
 #include "IA.h"
+#include "Action.h"
 
 extern BrickPi3 BP;
 extern Sensors Sen;
@@ -25,4 +26,5 @@ extern Asserv Ass;
 extern Robot Rob;
 extern IA MyIA;
 extern Config Conf;
+extern Action Act;
 #endif

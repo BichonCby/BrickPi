@@ -9,6 +9,7 @@ Position Pos;
 Asserv Ass;
 Robot Rob;
 IA MyIA;
+Action Act;
 
 int puiss = 30;
 int rot = 360;
@@ -63,7 +64,7 @@ void * seq20ms(void *)
     //  printf("Ultrasonic sensor (S1): CM %5.1f Inches %5.1f  \n", sonar.cm, sonar.inch);
     //}
     
-    //printf(" %5.1f cm \n", Sen.getSonar(PORT_1));
+    printf(" %5.1f cm \n", Sen.getSonar(PORT_1));
     //std::cout << ;
     //   Sen.getEncoder(1,2);
     std::cout << ".";//Rob.getCounter();
@@ -75,6 +76,7 @@ void * seq20ms(void *)
     // la séquence en elle même
     Pos.calcPosition();
     Ass.calcAsserv();
+    Act.calcAction();
     seqRun = false; 
 }
 

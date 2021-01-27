@@ -4,7 +4,11 @@ Asserv::Asserv()
 {
 	speedForMax = 30;
 	speedRotMax = 30;
-	}
+	Conf.getConfig((char *)("KP_FOR"), &KP_FOR);
+	Conf.getConfig((char *)("KP_ROT"), &KP_ROT);
+	Conf.getConfig((char *)("ANGLE_CONVERGE"), &ANGLE_CONVERGE);
+	Conf.getConfig((char *)("DIST_CONVERGE"), &DIST_CONVERGE);
+}
 
 int Asserv::calcAsserv()
 {
