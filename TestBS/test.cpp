@@ -65,11 +65,11 @@ void * seq20ms(void *)
     //  printf("Ultrasonic sensor (S1): CM %5.1f Inches %5.1f  \n", sonar.cm, sonar.inch);
     //}
     
-    printf(" %5.1f cm \n", Sen.getSonar(PORT_1));
+    //printf(" %5.1f cm \n", Sen.getSonar(PORT_1));
     //std::cout << ;
     //   Sen.getEncoder(1,2);
-    std::cout << ".";//Rob.getCounter();
-    fflush(stdout);
+    //std::cout << ".";//Rob.getCounter();
+    //fflush(stdout);
 
     Mot.setMotorPower(1,30);
     //BP.set_motor_dps(PORT_A,rot);

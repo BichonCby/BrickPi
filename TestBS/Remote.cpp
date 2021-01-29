@@ -9,10 +9,10 @@ Remote::Remote()
 void Remote::threadRemote()
 {
 	
-	int fd;
+	int fd,i;
 	char input;
-	const char * fiforead = "/tmp/RobBSmap"; // du robot vers l'outil
-	const char * fifowrite = "/tmp/BSmapRob"; // de l'outil vers le robot
+	const char * fifowrite = "/tmp/RobBSmap"; // du robot vers l'outil
+	const char * fiforead = "/tmp/BSmapRob"; // de l'outil vers le robot
 	
 	// création des fifo, au cas où elles n'existeraient pas
 	if (mkfifo(fiforead,0777) != 0 || mkfifo(fifowrite,0777) != 0)
@@ -21,45 +21,51 @@ void Remote::threadRemote()
 		//return;
 	}
 	printf("pipe OK\n");
+	stRemote = STREMOTE_WAIT_RECEIVE; // init
 	// on va lire et attendre de recevoir quelque chose
 	// début de la machine à état pour la com remote
 	// pour l'instant on boucle en lecture écriture
-	switch (stRemote)
+	while (1)
 	{
-		case STREMOTE_WAIT_RECEIVE :
-			fd=open(fiforead,O_RDONLY);
-			if (fd != -1) // la lecture s'est bien passée
-			{
-				printf("Reçu par le lecteur :\n");
-				// traitement
-				while(read(fd,&input,1)>0)
+		switch (stRemote)
+		{
+			case STREMOTE_WAIT_RECEIVE :
+				fd=open(fiforead,O_RDONLY);
+				if (fd != -1) // la lecture s'est bien passée
 				{
-					
-					decodeByte(input);
+					printf("Reçu par le lecteur :\n");
+					// traitement
+					i=0;
+					while(read(fd,&input,1)>0)
+					{
+						strRead[i++] = input;
+						//decodeByte(input);
+					}
+					decodeFrame();
+					printf("La lecture se termine!\n");
 				}
-				printf("La lecture se termine!\n");
-			}
-			else
-				printf("pipe HS\n"); // oups!
-			close (fd);
-			stRemote = STREMOTE_WAIT_SEND;
-			break;
-		case STREMOTE_WAIT_SEND :
-			fd=open(fifowrite,O_WRONLY);
-			if (fd != -1)
-			{
-				write(fd,strWrite, sizeWrite);
-				//sprintf(message, "bonjour du writer %d [%d]\n",compteur++,getpid());
-			}
-			else
-				printf("pipe HS\n");
-	
-			close (fd);
-			stRemote = STREMOTE_WAIT_RECEIVE;
-			break;
-		default :
-			break;
+				else
+					printf("pipe HS\n"); // oups!
+				close (fd);
+				stRemote = STREMOTE_WAIT_SEND;
+				break;
+			case STREMOTE_WAIT_SEND :
+				fd=open(fifowrite,O_WRONLY);
+				if (fd != -1)
+				{
+					write(fd,strWrite, sizeWrite);
+					//sprintf(message, "bonjour du writer %d [%d]\n",compteur++,getpid());
+				}
+				else
+					printf("pipe HS\n");
+		
+				close (fd);
+				stRemote = STREMOTE_WAIT_RECEIVE;
+				break;
+			default :
+				break;
 
+		}
 	}
 	return;
 
@@ -69,6 +75,17 @@ void Remote::threadRemote()
 int Remote::decodeByte(char b)
 {
 	printf("%c",b);
+	return 0;
+}
+// fonction de décodage de la trame reçue. Pour l'instant on écrit
+int Remote::decodeFrame()
+{
+	printf("%s",strRead);
+	if (strRead[0] == 'c')
+		strcpy(strWrite,"Salut!");
+	else 
+		strcpy(strWrite,"Hello!");
+	sizeWrite=6;
 	return 0;
 }
 
