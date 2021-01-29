@@ -10,6 +10,7 @@ Asserv Ass;
 Robot Rob;
 IA MyIA;
 Action Act;
+Remote Rem;
 
 int puiss = 30;
 int rot = 360;
@@ -80,17 +81,23 @@ void * seq20ms(void *)
     seqRun = false; 
 }
 
+void *remotecontrol(void *)
+{
+    Rem.threadRemote();
+}
 int main(int argc, char **argv)
 {
   pthread_t seq;
   pthread_t stt; // stop and stop du robot
   pthread_t stra; // strategie, en parallèle de la sequence20ms
+  pthread_t remt;
   std::cout << "Debut du programme\n";  
 //  return 0;
     sleepms(1000); //20ms c'est le temps de la séquence
   BP.detect(); // Make sure that the BrickPi3 is communicating and that the firmware is compatible with the drivers.
   pthread_create(&stt,NULL,&stopstart,NULL);
   pthread_create(&stra,NULL,&strategy,NULL);
+  pthread_create(&remt,NULL,&remotecontrol,NULL);
   
   //BP.set_sensor_type(PORT_1, SENSOR_TYPE_NXT_ULTRASONIC);
 

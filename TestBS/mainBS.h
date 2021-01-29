@@ -17,6 +17,7 @@
 #include "Robot.h"
 #include "IA.h"
 #include "Action.h"
+#include "Remote.h"
 
 extern BrickPi3 BP;
 extern Sensors Sen;
@@ -27,4 +28,5 @@ extern Robot Rob;
 extern IA MyIA;
 extern Config Conf;
 extern Action Act;
+extern Remote Rem;
 #endif

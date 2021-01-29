@@ -7,10 +7,16 @@ Robot::Robot()
 
 int Robot::initRobot()
 {
+	float val;
+	Conf.getConfig((char *)"VERSION",&val);versionRobot = (char)val;
 	color = GREEN;
 	stateMatch = MATCH_PREPARE;
 	score = 0;
 	counterMatch = 0;
+}
+char Robot::getVersion()
+{
+	return versionRobot;
 }
 int Robot::getColor()
 {

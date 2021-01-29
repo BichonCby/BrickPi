@@ -32,11 +32,12 @@ int getStateMatch();
 int getCounter();
 int setCounter(int c);
 int incCounter();
+char getVersion();
 private:
 int color;
 int stateMatch;
 int counterMatch;
-int versionRobot;
+char versionRobot;
 int typeMatch;
 int score;
 int initRobot();
