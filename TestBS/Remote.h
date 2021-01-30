@@ -23,12 +23,12 @@ Remote(void); // constructeur
 void threadRemote();
 private:
 int decodeFrame();
-int decodeByte(char b); // décodage octet par octet
 int encodeFrame(char id);// on va mettre dans stWrite le contenue de la trame id
 int stRemote; // etat de la machine de lecture/écriture
 char strRead[500]; // ça fait beaucoup
 char strWrite[20];
 int sizeWrite;
+int sizeRead;
 };
 
 #endif

@@ -72,6 +72,8 @@ int Position::setPosition(float x, float y, float a)
 }
 int Position::getPosition(float *x, float *y, float *a)
 {
-	
+	*x=posX;
+	*y=posY;
+	*a=posAlpha;
 	return 0;
 }

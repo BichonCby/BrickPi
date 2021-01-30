@@ -25,6 +25,7 @@ void Remote::threadRemote()
 	// on va lire et attendre de recevoir quelque chose
 	// début de la machine à état pour la com remote
 	// pour l'instant on boucle en lecture écriture
+	Pos.setPosition(-2000,5,5);
 	while (1)
 	{
 		switch (stRemote)
@@ -35,14 +36,14 @@ void Remote::threadRemote()
 				{
 					printf("Reçu par le lecteur :\n");
 					// traitement
-					i=0;
+					sizeRead=0;
 					while(read(fd,&input,1)>0)
 					{
-						strRead[i++] = input;
+						strRead[sizeRead++] = input;
 						//decodeByte(input);
 					}
 					decodeFrame();
-					printf("La lecture se termine!\n");
+					//printf("La lecture se termine!\n");
 				}
 				else
 					printf("pipe HS\n"); // oups!
@@ -51,6 +52,7 @@ void Remote::threadRemote()
 				break;
 			case STREMOTE_WAIT_SEND :
 				fd=open(fifowrite,O_WRONLY);
+				//printf("écriture de la réponse\n");
 				if (fd != -1)
 				{
 					write(fd,strWrite, sizeWrite);
@@ -71,21 +73,28 @@ void Remote::threadRemote()
 
 }
 
-// fonction de décodage octet par octet de la trame reçue. Pour l'instant on écrit
-int Remote::decodeByte(char b)
-{
-	printf("%c",b);
-	return 0;
-}
 // fonction de décodage de la trame reçue. Pour l'instant on écrit
 int Remote::decodeFrame()
 {
-	printf("%s",strRead);
-	if (strRead[0] == 'c')
-		strcpy(strWrite,"Salut!");
-	else 
-		strcpy(strWrite,"Hello!");
-	sizeWrite=6;
+	
+	for (int j=0;j<sizeRead;j++)
+		printf("%d ",strRead[j]);
+	printf("\n");
+	switch(strRead[0])
+	{
+		case ID_INFO : // on demande a lire une trame
+			// on peut tout vérifier
+			printf("demande de la trame ");
+			encodeFrame(strRead[3]);
+			break;
+		case ID_ORDER : // on donne un ordre
+			// on va traiter l'ordre, une fois qu'on saura comment faire
+			printf("ordre reçu\n");
+			encodeFrame(ID_ACK);
+			break;
+		default : // on ne connait pas la trame
+			printf("Trame reçue inconnue\n");
+	}
 	return 0;
 }
 
@@ -107,6 +116,7 @@ int Remote::encodeFrame(char id)
 			sizeWrite = 5;
 			break;
 		case ID_POSITION :
+			printf("Position.\n");
 			strWrite[0] = ID_POSITION;
 			strWrite[1] = 10;// taille utile
 			strWrite[2] = Rob.getVersion();
@@ -117,8 +127,16 @@ int Remote::encodeFrame(char id)
 			strWrite[6] = (char) (((int)val2)>>8 & 0x00FF); // pos Y poids fort
 			strWrite[7] = (char) ((int)val3 & 0x00FF); // pos A poids faible
 			strWrite[8] = (char) (((int)val3)>>8 & 0x00FF); // pos A poids fort
+			strWrite[9] = 0;
+			strWrite[10] = 0;
+			strWrite[11] = 0;
+			strWrite[12] = 0;
 			// ...
 			sizeWrite = 13;
+			Pos.getPosition(&val1,&val2,&val3);
+			printf("pos (X,Y,A) = %f %f %f\n",val1, val2, val3);
+			//printf("posX pf %d\n",strWrite[3]);
+			//printf("posX pF %d\n",strWrite[4]);
 			break;
 		default :
 			break;
