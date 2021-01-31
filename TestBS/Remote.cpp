@@ -113,7 +113,8 @@ int Remote::encodeFrame(char id)
 			strWrite[3] = strRead[3]; // l'odre donné
 			
 			strWrite[4] = ACK_OK; // pour l'instant tout est OK
-			sizeWrite = 5;
+			strWrite[5] = checkSum();
+			sizeWrite = strWrite[1]+4;
 			break;
 		case ID_POSITION :
 			printf("Position.\n");
@@ -131,16 +132,38 @@ int Remote::encodeFrame(char id)
 			strWrite[10] = 0;
 			strWrite[11] = 0;
 			strWrite[12] = 0;
+			strWrite[13] = checkSum();
 			// ...
-			sizeWrite = 13;
+			sizeWrite = strWrite[1]+4;
 			Pos.getPosition(&val1,&val2,&val3);
 			printf("pos (X,Y,A) = %f %f %f\n",val1, val2, val3);
 			//printf("posX pf %d\n",strWrite[3]);
 			//printf("posX pF %d\n",strWrite[4]);
 			break;
+		case ID_ROBOT :
+			printf("Robot.\n");
+			strWrite[0] = ID_ROBOT;
+			strWrite[1] = 4;// taille utile
+			strWrite[2] = Rob.getVersion();
+			
+			strWrite[3] = (char) (Rob.getColor()); // couleur
+			strWrite[4] = (char) (Rob.getScore()); // score
+			strWrite[5] = (char) (Rob.getCounter()); // durée dans le match
+			strWrite[6] = (char) (Rob.getStateMatch()); // etat 
+			// ...
+			strWrite[7] = checkSum();
+			sizeWrite = strWrite[1]+4;
 		default :
 			break;
 	}
 	return 0;
 	
+}
+// calcule le checksum, à savoir la somme de tous les octets, casté en char
+char Remote::checkSum()
+{
+	int cs=0;
+	for (int i=0;i<strWrite[1]+3;i++)
+		cs+=(int)strWrite[i];
+	return (char)cs;
 }
