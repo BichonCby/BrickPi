@@ -8,6 +8,7 @@ Position(void); // constructeur
 int calcPosition();// fonction récurrente
 int setPosition(float x, float y, float a);
 int getPosition(float *x, float *y, float *a);
+int getSpeed(float *f, float *r);
 // coefficients relus du fichier de config
 private:
 float COEFF_SPD_FOR=1.5;// pour obtenir une vitesse en m/s

@@ -77,3 +77,9 @@ int Position::getPosition(float *x, float *y, float *a)
 	*a=posAlpha;
 	return 0;
 }
+int getSpeed(float *f, float *r)
+{
+	*f=speedFor;
+	*r=speedRot;
+	return 0;
+}

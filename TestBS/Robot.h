@@ -33,6 +33,8 @@ int getCounter();
 int setCounter(int c);
 int incCounter();
 char getVersion();
+uint8_t whlRight; // le numéro du moteur droit
+uint8_t whlLeft; // le numéro du moteur gauche
 private:
 int color;
 int stateMatch;

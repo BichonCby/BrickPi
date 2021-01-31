@@ -3,8 +3,8 @@
 class MotorsBS{
 public:
 MotorsBS(void); // constructeur
-int setMotorSpeed(int num,int spd); 
-int setMotorPower(int num, int pow);
+int setMotorSpeed(uint8_t num,int spd); 
+int setMotorPower(uint8_t num, int pow);
 };
 
 #endif

@@ -9,6 +9,9 @@ int Robot::initRobot()
 {
 	float val;
 	Conf.getConfig((char *)"VERSION",&val);versionRobot = (char)val;
+	Conf.getConfig((char *)"WHEEL_RIGHT",&val);whlRight = (uint8_t)val;
+	Conf.getConfig((char *)"WHEEL_LEFT",&val);whlLeft = (uint8_t)val;
+	Conf.getConfig((char *)"SCORE_INIT",&val);score = (int)val;
 	color = GREEN;
 	stateMatch = MATCH_PREPARE;
 	score = 0;

@@ -14,6 +14,7 @@ int Asserv::calcAsserv()
 {
 	generateVirtualSpeed();
 	driveWheels();
+	checkBlocked();
 	return 0;
 }
 
@@ -119,16 +120,37 @@ void Asserv::generateVirtualSpeed(void)
 
 void Asserv::driveWheels(void)
 {
+	float tmp;
 	switch (typeAss)
 	{
 		case ASS_NUL :
 		default :
-			Mot.setMotorPower(1,0);
+			Mot.setMotorPower(Rob.whlLeft,0);
+			Mot.setMotorPower(Rob.whlRight,0);
+			break;
+		case ASS_BLOCK :
+			Mot.setMotorSpeed(Rob.whlLeft,0);
+			Mot.setMotorSpeed(Rob.whlRight,0);
 			break;
 		case ASS_MANUAL :
-			Mot.setMotorSpeed(1,speedRightMan);
-			Mot.setMotorSpeed(2,speedLeftMan);
+			Mot.setMotorSpeed(Rob.whlRight,speedRightMan);
+			Mot.setMotorSpeed(Rob.whlLeft,speedLeftMan);
 			break;
+		case ASS_POLAR:
+		case ASS_POLARREV:
+		case ASS_ROTATION:
+		case ASS_CIRCLE:
+		case ASS_PIVOT:
+			// roue droite
+			tmp = speedForReq+speedRotReq;
+			// à voir pour saturer
+			// à voir pour pratiquer une rampe
+			Mot.setMotorSpeed(Rob.whlRight,(int)tmp);
+			// roue gauche
+			tmp = speedForReq-speedRotReq;
+			// à voir pour saturer
+			// à voir pour pratiquer une rampe
+			Mot.setMotorSpeed(Rob.whlLeft,(int)tmp);
 	}
 	return;
 	
@@ -139,7 +161,7 @@ bool Asserv::isConverge(void)
 	return converge;
 }
 
-void Asserv::goForward(int x, int y, int speed)
+int Asserv::goForward(int x, int y, int speed)
 {
 	// mettre un sémaphore
 	targetX = x;
@@ -150,9 +172,22 @@ void Asserv::goForward(int x, int y, int speed)
 	sleepms(20); // pour être sûr que c'est pris en compte
 	while (isConverge() == false)
 		sleepms(20);
-	return;
+	return 0;
 }
-void Asserv::turn(int a, int speed)
+int Asserv::goBackward(int x, int y, int speed)
+{
+	// mettre un sémaphore
+	targetX = x;
+	targetY = y;
+	typeAss = ASS_POLARREV;
+	speedForMax = speed;
+	speedRotMax = 30; // il faudra mettre une calibration
+	sleepms(20); // pour être sûr que c'est pris en compte
+	while (isConverge() == false)
+		sleepms(20);
+	return 0;
+}
+int Asserv::turn(int a, int speed)
 {
 	// mettre un sémaphore
 	targetA = a;
@@ -162,6 +197,32 @@ void Asserv::turn(int a, int speed)
 	usleep(20000); // pour être sûr que c'est pris en compte
 	while (isConverge() == false)
 		usleep(20000);
-	return;
+	return 0;
+}
+int Asserv::checkBlocked() // détection de blocage, appel régulier
+{
+	float sf,sr;
+	Pos.getSpeed(&sf,&sr);
+	// il faudra y mettre des calibrations de config
+	if (	(speedForReq > 30 && sf <20)
+		||	(speedForReq < -30 && sr >-20))
+		cntBlock +=1;
+	else
+		cntBlock -=2;
+	if (cntBlock > 14)
+	{
+		blocked = true;
+		cntBlock = 14;
+	}
+	if (cntBlock < 0)
+	{
+		blocked = false;
+		cntBlock = 0;
+	}
+	return 0;
+}
+bool Asserv::isBlocked()
+{
+	return blocked;
 }
 	
