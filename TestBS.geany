@@ -19,7 +19,7 @@ indent_mode=2
 
 [project]
 name=TestBS
-base_path=/home/pi/projects/TestBS/
+base_path=/home/pi/projects/BrickPiStory/TestBS/
 description=
 file_patterns=
 
@@ -28,25 +28,37 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=16
-FILE_NAME_0=255;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FSensors.cpp;0;4
-FILE_NAME_1=236;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FSensors.h;0;4
-FILE_NAME_2=439;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FmainBS.h;0;4
-FILE_NAME_3=44;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FMotorsBS.cpp;0;4
-FILE_NAME_4=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FMotorsBS.h;0;4
-FILE_NAME_5=919;C++;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2Ftest.cpp;0;2
-FILE_NAME_6=314;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FPosition.h;0;4
-FILE_NAME_7=162;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FPosition.cpp;0;4
-FILE_NAME_8=444;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FAsserv.h;0;4
-FILE_NAME_9=2271;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FAsserv.cpp;0;4
-FILE_NAME_10=152;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FRobot.h;0;4
-FILE_NAME_11=476;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FRobot.cpp;0;4
-FILE_NAME_12=146;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FIA.h;0;4
-FILE_NAME_13=54;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FIA.cpp;0;4
-FILE_NAME_14=150;Make;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FMakefile;0;4
-FILE_NAME_15=83;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FUtils.h;0;4
-FILE_NAME_16=710;C++;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FBrickPi3.cpp;0;2
-FILE_NAME_17=6379;C++;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fprojects%2FTestBS%2FBrickPi3.h;0;2
+current_page=12
+FILE_NAME_0=102;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FAsserv.cpp;0;4
+FILE_NAME_1=301;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FAsserv.h;0;4
+FILE_NAME_2=4853;C++;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FBrickPi3.cpp;0;2
+FILE_NAME_3=6337;C++;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FBrickPi3.h;0;2
+FILE_NAME_4=270;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FIA.cpp;0;4
+FILE_NAME_5=147;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FIA.h;0;4
+FILE_NAME_6=140;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FmainBS.h;0;4
+FILE_NAME_7=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FMotorsBS.cpp;0;4
+FILE_NAME_8=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FMotorsBS.h;0;4
+FILE_NAME_9=1698;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FPosition.cpp;0;4
+FILE_NAME_10=234;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FPosition.h;0;4
+FILE_NAME_11=286;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FRobot.cpp;0;4
+FILE_NAME_12=710;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FRobot.h;0;4
+FILE_NAME_13=844;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FSensors.cpp;0;4
+FILE_NAME_14=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FSensors.h;0;4
+FILE_NAME_15=1558;C++;0;EUTF-8;0;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2Ftest.cpp;0;4
+FILE_NAME_16=142;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FUtils.h;0;4
+FILE_NAME_17=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FConfig.h;0;4
+FILE_NAME_18=1709;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FConfig.cpp;0;4
+FILE_NAME_19=154;Make;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FMakefile;0;4
+FILE_NAME_20=431;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2Fi2c.cpp;0;4
+FILE_NAME_21=266;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FAction.h;0;4
+FILE_NAME_22=448;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FAction.cpp;0;4
+FILE_NAME_23=90;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBrickStory%2FTestCpp%2Fsignaux.cpp;0;4
+FILE_NAME_24=397;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBrickStory%2FTestCpp%2Fwriter.cpp;0;4
+FILE_NAME_25=203;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2FBrickStory%2FTestCpp%2Freader.cpp;0;4
+FILE_NAME_26=476;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FRemote.h;0;4
+FILE_NAME_27=1682;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBrickPiStory%2FTestBS%2FRemote.cpp;0;4
+FILE_NAME_28=4622;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBSmap%2FBSmap.cpp;0;4
+FILE_NAME_29=435;C++;0;EUTF-8;1;1;0;%2Fhome%2Fpi%2Fprojects%2FBSmap%2FBSmap.h;0;4
 
 [VTE]
 last_dir=/home/pi
