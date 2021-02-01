@@ -35,14 +35,6 @@ int Position::calcPosition() // fonction récurrente
 	// protection débordement
 	deltaPosWhlR = modulo180(deltaPosWhlR);
 	deltaPosWhlL = modulo180(deltaPosWhlL);
-	//if (deltaPosWhlR > 180)
-		//deltaPosWhlR -= 360;
-	//else if (deltaPosWhlR <-180)
-		//deltaPosWhlR +=360;
-	//if (deltaPosWhlL > 180)
-		//deltaPosWhlL -= 360;
-	//else if (deltaPosWhlL <-180)
-		//deltaPosWhlL +=360;
 		
 	// Calcul de vitesses
 	speedFor = (float)(deltaPosWhlR + deltaPosWhlL)*COEFF_SPD_FOR;
@@ -77,7 +69,7 @@ int Position::getPosition(float *x, float *y, float *a)
 	*a=posAlpha;
 	return 0;
 }
-int getSpeed(float *f, float *r)
+int Position::getSpeed(float *f, float *r)
 {
 	*f=speedFor;
 	*r=speedRot;

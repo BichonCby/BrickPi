@@ -77,6 +77,7 @@ void Asserv::generateVirtualSpeed(void)
 			
 			break;
 		case ASS_ROTATION :
+		case ASS_PIVOT :
 			deltaAngle = modulo180(targetA-curA);
 			distance = 0;
 			break;
@@ -140,7 +141,6 @@ void Asserv::driveWheels(void)
 		case ASS_POLARREV:
 		case ASS_ROTATION:
 		case ASS_CIRCLE:
-		case ASS_PIVOT:
 			// roue droite
 			tmp = speedForReq+speedRotReq;
 			// à voir pour saturer
@@ -151,6 +151,19 @@ void Asserv::driveWheels(void)
 			// à voir pour saturer
 			// à voir pour pratiquer une rampe
 			Mot.setMotorSpeed(Rob.whlLeft,(int)tmp);
+			break;
+		case ASS_PIVOT:
+			if (blockedWhl == Rob.whlLeft)
+			{
+				Mot.setMotorSpeed(Rob.whlLeft,0);
+				Mot.setMotorSpeed(Rob.whlRight,speedRotReq);
+			}
+			else
+			{
+				Mot.setMotorSpeed(Rob.whlRight,0);
+				Mot.setMotorSpeed(Rob.whlLeft,speedRotReq);
+			}
+			break;
 	}
 	return;
 	
@@ -199,6 +212,16 @@ int Asserv::turn(int a, int speed)
 		usleep(20000);
 	return 0;
 }
+int Asserv::pivot(uint8_t blkWhl,uint8_t dir, int angle)
+{
+	blockedWhl = blkWhl;
+	typeAss = ASS_PIVOT;
+	sleepms(20);
+	while(isConverge() == false)
+		sleepms(20);
+	return 0;
+}
+	
 int Asserv::checkBlocked() // détection de blocage, appel régulier
 {
 	float sf,sr;
@@ -225,4 +248,7 @@ bool Asserv::isBlocked()
 {
 	return blocked;
 }
-	
+float Asserv::getSpeedForReq()
+{
+	return speedForReq;
+}

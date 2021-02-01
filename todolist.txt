@@ -6,7 +6,7 @@ capteurs contact
 communication debug
 log
 //actions
-//fichier de config
+//fichier de config ==> A améliorer pour les commentaires, et l'écriture
 sémaphores pour les types de déplacement
 
 A tester

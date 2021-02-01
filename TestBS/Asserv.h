@@ -11,16 +11,19 @@
 #define ASS_CIRCLE 6
 #define ASS_BLOCK 10
 
-
+// défintion de la classe
 class Asserv{
 public:
 Asserv(void); // constructeur
-int calcAsserv(); 
-bool isConverge();
-bool isBlocked();
-int goForward(int x, int y, int speed); 
-int goBackward(int x, int y, int speed); 
-int turn(int a, int speed);
+int calcAsserv(); // fonction appelée dans la séquence 20ms
+bool isConverge(); // indique si l'on est convergé
+bool isBlocked(); // indique un blocage confirmé du robot
+int goForward(int x, int y, int speed); // primitive polaire avec cible
+int goBackward(int x, int y, int speed);  // primitive polaire à l'envers avec cible
+int turn(int angle, int speed); // rotation jusqu'à l'angle défini
+int pivot(uint8_t blkWhl,uint8_t dir, int angle);
+float getSpeedForReq();
+
 private:
 float DIST_CONVERGE = 10; // en mm
 float ANGLE_CONVERGE = 10; // en degré
@@ -29,6 +32,7 @@ float KP_ROT = 1;
 void generateVirtualSpeed(void);
 void driveWheels(void);
 int checkBlocked();
+
 float targetX;
 float targetY;
 float targetA;
@@ -42,6 +46,8 @@ int speedLeftMan;
 bool converge;
 bool blocked;
 int cntBlock;
+uint8_t blockedWhl;
+
 };
 
 #endif

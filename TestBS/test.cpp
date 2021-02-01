@@ -11,6 +11,7 @@ Robot Rob;
 IA MyIA;
 Action Act;
 Remote Rem;
+Detection Det;
 
 int puiss = 30;
 int rot = 360;

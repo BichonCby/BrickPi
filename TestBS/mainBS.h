@@ -18,6 +18,7 @@
 #include "IA.h"
 #include "Action.h"
 #include "Remote.h"
+#include "Detection.h"
 
 extern BrickPi3 BP;
 extern Sensors Sen;
@@ -29,4 +30,5 @@ extern IA MyIA;
 extern Config Conf;
 extern Action Act;
 extern Remote Rem;
+extern Detection Det;
 #endif
