@@ -10,6 +10,7 @@ int Config::readConfig()
 {
     char ligne[100];
     char calib[100];
+    char categ[50]="* no categ";
     float val;
     int idx=0;
     FILE * pfile;
@@ -22,22 +23,26 @@ int Config::readConfig()
 			strcat(heading,ligne);
 			printf("commentaire\n");// on peut conserver ces lignes pour la ré-écriture
 		}
+		else if (ligne[0] == '*') // category
+		{
+			sscanf(ligne,"%s",categ);
+		}
 		else if (ligne[0] != '#' && strlen(ligne) > 5) // on supprime les lignes vides et les têtes de chapitre
 		{
 			sscanf(ligne,"%s = %f",elConf[idx].name, &elConf[idx].val);
+			if (strstr(ligne,"//")!=NULL)
+				strcpy(elConf[idx].comment,strstr(ligne,"//"));
+			else
+				strcpy(elConf[idx].comment,"//");
+			//char *tmp=ligne+strstr(ligne,"//");
+			//strcpy(elConf[idx].comment,((char*)ligne)+strstr(ligne,"//"));
+			strcpy(elConf[idx].category,categ);
 			idx++;
 		}
-/*		else if (strncmp("COEFF_SPD_FOR",ligne,strlen("COEFF_SPD_FOR"))==0)
-			sscanf(ligne,"%s = %f",calib, &Pos.COEFF_SPD_FOR);
-		else if (strncmp("COEFF_SPD_ROT",ligne,strlen("COEFF_SPD_ROT"))==0)
-			sscanf(ligne,"%s = %f",calib, &Pos.COEFF_SPD_ROT);
-		else if (strncmp("COEFF_ANG",ligne,strlen("COEFF_ANG"))==0)
-			sscanf(ligne,"%s = %f",calib, &Pos.COEFF_ANG);
-		else if (strncmp("COEFF_MM",ligne,strlen("COEFF_MM"))==0)
-			sscanf(ligne,"%s = %f",calib, &Pos.COEFF_MM);*/
 	}
 	nbConf=idx;
-	printf("%s = %f\n",elConf[0].name, elConf[0].val);
+	printf("%s = %f %s\n",elConf[0].name, elConf[0].val, elConf[0].comment);
+	printf("%s = %f %s\n",elConf[1].name, elConf[1].val, elConf[1].comment);
     fclose(pfile);
     return 0;
 }
@@ -69,10 +74,16 @@ int Config::writeConfig()
 {
     FILE * pfile;
     pfile = fopen("configout.ini","w");
+    char cat[50]=" nul";
     if (pfile == NULL) {fputs("File error",stdout); return -1;}
-	fprintf(pfile,"%s",heading);
+	fprintf(pfile,"%s\n",heading);
 	for (int i=0;i<nbConf;i++)
+	{
+		if (strcmp(elConf[i].category,cat)) // c'est different
+			fprintf( pfile,"\n%s\n\n",elConf[i].category);
+		strcpy(cat,elConf[i].category);
 		fprintf(pfile,"%s = %f\n",elConf[i].name,elConf[i].val);
+	}
 	fclose(pfile);
 	return 0;
 }

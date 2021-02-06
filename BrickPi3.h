@@ -189,7 +189,7 @@ enum SENSOR_CONFIG_FLAGS{
 // structure for I2C
 struct i2c_struct_t{
   uint8_t speed;
-  uint8_t delay;
+  uint32_t delay; // modif CBY
   uint8_t address;
   uint8_t length_write;
   uint8_t buffer_write[LONGEST_I2C_TRANSFER];

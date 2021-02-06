@@ -6,7 +6,7 @@ capteurs contact
 communication debug
 log
 //actions
-//fichier de config ==> A améliorer pour les commentaires, et l'écriture
+//fichier de config
 sémaphores pour les types de déplacement
 
 A tester
@@ -17,3 +17,5 @@ compteur temporel ==> OK
 différents actionneurs
 contacteurs (tirette, BAU, couleur)
 
+A analyser 
+les trames i2c et SPI  

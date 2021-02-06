@@ -4,6 +4,8 @@
 struct conf_element {
 	char name[50];
 	float val;
+	char comment[50];
+	char category[15];
 };
 class Config{
 public:
