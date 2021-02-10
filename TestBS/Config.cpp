@@ -21,7 +21,7 @@ int Config::readConfig()
 		if (ligne[0] == '#' && idx == 0) // en tete
 		{
 			strcat(heading,ligne);
-			printf("commentaire\n");// on peut conserver ces lignes pour la ré-écriture
+//			printf("commentaire\n");// on peut conserver ces lignes pour la ré-écriture
 		}
 		else if (ligne[0] == '*') // category
 		{
@@ -41,8 +41,8 @@ int Config::readConfig()
 		}
 	}
 	nbConf=idx;
-	printf("%s = %f %s\n",elConf[0].name, elConf[0].val, elConf[0].comment);
-	printf("%s = %f %s\n",elConf[1].name, elConf[1].val, elConf[1].comment);
+//	printf("%s = %f %s\n",elConf[0].name, elConf[0].val, elConf[0].comment);
+//	printf("%s = %f %s\n",elConf[1].name, elConf[1].val, elConf[1].comment);
     fclose(pfile);
     return 0;
 }

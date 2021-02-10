@@ -1,6 +1,8 @@
 #include "mainBS.h"
 
 sensor_ultrasonic_t sonar1;
+sensor_color_t      Color1;
+sensor_encoder_t 	coderRight, coderLeft;
 i2c_struct_t myi2c;
 Sensors::Sensors()
 {
@@ -33,10 +35,15 @@ int Sensors::getSonar(uint8_t num) // valeur du sonar
 }
 int Sensors::readEncoder(void)
 {
+	BP.get_sensor(Rob.encoderRight,&coderRight);
+	BP.get_sensor(Rob.encoderLeft,&coderLeft);
 	return 0;
 }
 int Sensors::getEncoder(int *right,int *left)// valeur des codeurs, avec sémaphored
 {
-	return 0;
+	*right = coderRight.angle;
+	*left = coderLeft.angle;
+	
+	return 0;  
 }
 

@@ -1,19 +1,20 @@
 A coder 
 
+Emulateur => implémenter les codeurs indépendants VS codeurs intégrés
+Vérifier les unités des vitesses.
 différents type de déplacement
-détection
+détection, comment l'intégrer
+stratégie, comment ne pas bloquer et en même temps autoriser le remote?
 capteurs contact
 communication debug
 log
 //actions
-//fichier de config
 sémaphores pour les types de déplacement
 
 A tester
 
 pilotage manuel des roues
 codeurs Lego
-compteur temporel ==> OK
 différents actionneurs
 contacteurs (tirette, BAU, couleur)
 

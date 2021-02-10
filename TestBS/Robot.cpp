@@ -11,6 +11,8 @@ int Robot::initRobot()
 	Conf.getConfig((char *)"VERSION",&val);versionRobot = (char)val;
 	Conf.getConfig((char *)"WHEEL_RIGHT",&val);whlRight = (uint8_t)val;
 	Conf.getConfig((char *)"WHEEL_LEFT",&val);whlLeft = (uint8_t)val;
+	Conf.getConfig((char *)"ENCODER_LEFT",&val);encoderLeft = (uint8_t)val;
+	Conf.getConfig((char *)"ENCODER_RIGHT",&val);encoderRight = (uint8_t)val;
 	Conf.getConfig((char *)"SCORE_INIT",&val);score = (int)val;
 	color = GREEN;
 	stateMatch = MATCH_PREPARE;
@@ -65,3 +67,7 @@ int Robot::incCounter()
 {
 	return counterMatch++;
 }
+int Robot::getTypeMatch()
+{
+	return typeMatch;
+}	

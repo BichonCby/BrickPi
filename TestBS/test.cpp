@@ -2,7 +2,11 @@
 
 #include "mainBS.h"
 Config Conf;
+#ifdef EMULATOR
+Emul BP;
+#else
 BrickPi3 BP;
+#endif
 Sensors Sen;
 MotorsBS Mot;
 Position Pos;
@@ -12,6 +16,11 @@ IA MyIA;
 Action Act;
 Remote Rem;
 Detection Det;
+
+  pthread_t seq;
+  pthread_t stt; // stop and stop du robot
+  pthread_t stra; // strategie, en parallèle de la sequence20ms
+  pthread_t remt;
 
 int puiss = 30;
 int rot = 360;
@@ -51,6 +60,7 @@ void * strategy (void *)
 }
 void * seq20ms(void *)
 {
+    char *ret;
     if (seqRun)
     {
         // watchdog, c'est la merde
@@ -58,6 +68,9 @@ void * seq20ms(void *)
         exit(-1);
     }
     seqRun = true;
+#ifdef EMULATOR
+    BP.runEmul();
+#endif
     Sen.readEncoder();
     //Sen.getSonar(PORT_1);
     //   if(BP.get_sensor(PORT_1, &sonar)){
@@ -72,14 +85,17 @@ void * seq20ms(void *)
     //std::cout << ".";//Rob.getCounter();
     //fflush(stdout);
 
-    Mot.setMotorPower(1,30);
+    //Mot.setMotorPower(1,30);
     //BP.set_motor_dps(PORT_A,rot);
-    BP.set_led(led);
+    //BP.set_led(led);
     // la séquence en elle même
+ //   printf("1");
     Pos.calcPosition();
     Ass.calcAsserv();
     Act.calcAction();
+    
     seqRun = false; 
+    //return ret;
 }
 
 void *remotecontrol(void *)
@@ -88,13 +104,9 @@ void *remotecontrol(void *)
 }
 int main(int argc, char **argv)
 {
-  pthread_t seq;
-  pthread_t stt; // stop and stop du robot
-  pthread_t stra; // strategie, en parallèle de la sequence20ms
-  pthread_t remt;
   std::cout << "Debut du programme\n";  
 //  return 0;
-    sleepms(1000); //20ms c'est le temps de la séquence
+    sleepms(20); //20ms c'est le temps de la séquence
   BP.detect(); // Make sure that the BrickPi3 is communicating and that the firmware is compatible with the drivers.
   pthread_create(&stt,NULL,&stopstart,NULL);
   pthread_create(&stra,NULL,&strategy,NULL);
@@ -104,9 +116,15 @@ int main(int argc, char **argv)
 
   while (Rob.getStateMatch() != MATCH_END)
   {
+    
     //std::thread t1(seq20ms);
-    pthread_create(&seq,NULL,&seq20ms,NULL);
-    sleepms(1000); //20ms c'est le temps de la séquence
+    if (int ret = pthread_create(&seq,NULL,&seq20ms,NULL))
+        {printf("%d ",ret);fflush(stdout);}
+    pthread_detach(seq); // pour libérer la pile
+    sleepms(20); //20ms c'est le temps de la séquence
+   
+  //  if (seq != (pthread_t)NULL)
+  //      printf("non nul\n");
     //usleep(1000000);
   }
   BP.reset_all(); 

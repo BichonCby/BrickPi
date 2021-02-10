@@ -33,8 +33,11 @@ int getCounter();
 int setCounter(int c);
 int incCounter();
 char getVersion();
+int getTypeMatch();
 uint8_t whlRight; // le numéro du moteur droit
 uint8_t whlLeft; // le numéro du moteur gauche
+uint8_t encoderLeft; // le port du codeur gauche
+uint8_t encoderRight; // le port du codeur droit
 uint8_t sonFrRight; // le numéro du sonar avant droit
 uint8_t sonFrLeft; // le numéro du sonar avant gauche
 uint8_t sonReRight;// le numéro du sonar arrière droit

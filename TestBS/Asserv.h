@@ -7,8 +7,8 @@
 #define ASS_POLARREV 2
 #define ASS_ROTATION 3
 #define ASS_MANUAL 4
-#define ASS_PIVOT 5
-#define ASS_CIRCLE 6
+#define ASS_PIVOT 6
+#define ASS_CIRCLE 7
 #define ASS_BLOCK 10
 
 // défintion de la classe
@@ -22,8 +22,11 @@ int goForward(int x, int y, int speed); // primitive polaire avec cible
 int goBackward(int x, int y, int speed);  // primitive polaire à l'envers avec cible
 int turn(int angle, int speed); // rotation jusqu'à l'angle défini
 int pivot(uint8_t blkWhl,uint8_t dir, int angle);
+int manualSpeed(int spdRight, int spdLeft);
+int manualPower(int powerRight, int powerLeft);
 float getSpeedForReq();
-
+int getTarget(float *tarX,float *tarY, float *tarA, int *typ); 
+int getSpeed(float *spdFor, float *spdRot);
 private:
 float DIST_CONVERGE = 10; // en mm
 float ANGLE_CONVERGE = 10; // en degré

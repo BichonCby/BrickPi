@@ -7,10 +7,10 @@ IA::IA()
 
 int IA::launchIA()
 {
-	DoSquare();
-	DoNothing(1000);
+	//DoSquare();
+	DoNothing(100000);
 	
-	DoSquare();
+	//DoSquare();
 	return 0;
 }
 void IA::DoSquare()

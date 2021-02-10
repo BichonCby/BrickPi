@@ -13,6 +13,7 @@ Asserv::Asserv()
 int Asserv::calcAsserv()
 {
 	generateVirtualSpeed();
+	//printf("type asserv %d\n",typeAss);
 	driveWheels();
 	checkBlocked();
 	return 0;
@@ -101,7 +102,7 @@ void Asserv::generateVirtualSpeed(void)
 	// saturation des vitesses de consigne
 	speedForReq = fmaxf(fminf(speedForReq,speedForMax),-speedForMax);
 	speedRotReq = fmaxf(fminf(speedRotReq,speedRotMax),-speedRotMax);
-	return;
+	//return;
 	
 	// détermination de la convergence
 	if (  (typeAss == ASS_NUL)
@@ -113,6 +114,7 @@ void Asserv::generateVirtualSpeed(void)
 		converge = true;
 		speedForReq = 0;
 		speedRotReq = 0;
+		//printf(".");
 	}
 	else
 		converge = false;
@@ -183,9 +185,9 @@ int Asserv::goForward(int x, int y, int speed)
 	speedForMax = speed;
 	speedRotMax = 30; // il faudra mettre une calibration
 	sleepms(20); // pour être sûr que c'est pris en compte
-	while (isConverge() == false)
-		sleepms(20);
-	return 0;
+//	while (isConverge() == false)
+//		sleepms(20);
+//	return 0;
 }
 int Asserv::goBackward(int x, int y, int speed)
 {
@@ -203,13 +205,15 @@ int Asserv::goBackward(int x, int y, int speed)
 int Asserv::turn(int a, int speed)
 {
 	// mettre un sémaphore
-	targetA = a;
+	printf("rotation\n");
+	targetA = (float)a;
 	typeAss = ASS_ROTATION;
-	speedRotMax = speed;
+	speedRotMax = (float)speed;
 	speedForMax = 30; // il faudra mettre une calibration
-	usleep(20000); // pour être sûr que c'est pris en compte
-	while (isConverge() == false)
-		usleep(20000);
+	sleepms(20); // pour être sûr que c'est pris en compte
+	printf("tarA =%d\n",(int)targetA);
+//	while (isConverge() == false)
+//		usleep(20000);
 	return 0;
 }
 int Asserv::pivot(uint8_t blkWhl,uint8_t dir, int angle)
@@ -221,7 +225,18 @@ int Asserv::pivot(uint8_t blkWhl,uint8_t dir, int angle)
 		sleepms(20);
 	return 0;
 }
-	
+int Asserv::manualSpeed(int spdRight, int spdLeft)
+{
+	typeAss = ASS_MANUAL;
+	speedLeftMan = spdLeft;
+	speedRightMan = spdRight;
+}
+int Asserv::manualPower(int powerRight, int powerLeft)
+{
+	Mot.setMotorPower(Rob.whlLeft,powerLeft);
+	Mot.setMotorPower(Rob.whlRight,powerRight);
+}
+
 int Asserv::checkBlocked() // détection de blocage, appel régulier
 {
 	float sf,sr;
@@ -251,4 +266,20 @@ bool Asserv::isBlocked()
 float Asserv::getSpeedForReq()
 {
 	return speedForReq;
+}
+int Asserv::getTarget(float *tarX,float *tarY, float *tarA, int *typ) 
+{
+	*tarX=targetX;
+	*tarY=targetY;
+	*tarA=targetA;
+	*typ=typeAss;
+	printf("targetA = %d\n",(int)targetA);
+	return 0;
+}
+int Asserv::getSpeed(float *spdFor, float *spdRot)
+{
+	*spdFor=speedForReq;
+	*spdRot=speedRotReq;
+	printf("spdRot = %d\n",(int)(speedRotReq));
+	return 0;
 }
