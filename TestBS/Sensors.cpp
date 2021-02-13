@@ -39,7 +39,7 @@ int Sensors::readEncoder(void)
 	BP.get_sensor(Rob.encoderLeft,&coderLeft);
 	return 0;
 }
-int Sensors::getEncoder(int *right,int *left)// valeur des codeurs, avec sémaphored
+int Sensors::getEncoder(int32_t *right,int32_t *left)// valeur des codeurs, avec sémaphored
 {
 	*right = coderRight.angle;
 	*left = coderLeft.angle;

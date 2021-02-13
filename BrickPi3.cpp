@@ -12,12 +12,23 @@
  */
 
 #include "BrickPi3.h"
-
+#define DEBUG_BS
 int spi_file_handle = -1;                    // SPI file handle
 struct spi_ioc_transfer spi_xfer_struct;     // SPI transfer struct
 uint8_t spi_array_out[LONGEST_SPI_TRANSFER]; // SPI out array
 uint8_t spi_array_in[LONGEST_SPI_TRANSFER];  // SPI in array
 
+void initArray() // fonction créee par CBY pour tester les trames i2c
+{
+#ifdef DEBUG_BS
+  for (int i=0;i<20;i++)
+  {
+    spi_array_in[i]=0;
+    spi_array_out[i] =0;
+  }
+#endif
+  return;
+}
 // Set up SPI. Open the file, and define the configuration.
 int spi_setup(){
   spi_file_handle = open(SPIDEV_FILE_NAME, O_RDWR);
@@ -317,6 +328,7 @@ int BrickPi3::get_voltage_battery(float &voltage){
 }
 
 int BrickPi3::set_sensor_type(uint8_t port, uint8_t type, uint16_t flags, i2c_struct_t *i2c_struct){
+  initArray(); // CBY
   for(uint8_t p = 0; p < 4; p++){
     if(port & (1 << p)){
       SensorType[p] = type;
@@ -363,10 +375,22 @@ int BrickPi3::set_sensor_type(uint8_t port, uint8_t type, uint16_t flags, i2c_st
     }
   }
 
-  return spi_transfer_array(spi_transfer_length, spi_array_out, spi_array_in);
+  int ret = spi_transfer_array(spi_transfer_length, spi_array_out, spi_array_in);
+#ifdef DEBUG_BS
+  printf("set_sensor type %d\n send :",ret);
+  for (int i=0;i<20;i++)
+    printf("%x ",spi_array_out[i]);
+  printf("\nreceived :");
+  for (int i=0;i<20;i++)
+    printf("%x ",spi_array_in[i]);
+  printf("\n");
+#endif
+    
+  return ret;
 }
 
 int BrickPi3::transact_i2c(uint8_t port, i2c_struct_t *i2c_struct){
+  initArray(); // CBY
   uint8_t msg_type;
   switch(port){
     case PORT_1:
@@ -408,10 +432,23 @@ int BrickPi3::transact_i2c(uint8_t port, i2c_struct_t *i2c_struct){
     spi_array_out[5 + i] = i2c_struct->buffer_write[i];
   }
 
-  return spi_transfer_array((5 + i2c_struct->length_write), spi_array_out, spi_array_in);
+  int ret = spi_transfer_array((5 + i2c_struct->length_write), spi_array_out, spi_array_in);
+#ifdef DEBUG_BS
+  printf("transact i2c %d\n send :",ret);
+  for (int i=0;i<20;i++)
+    printf("%x ",spi_array_out[i]);
+  printf("\nreceived :");
+  for (int i=0;i<20;i++)
+    printf("%x ",spi_array_in[i]);
+  printf("\n");
+#endif
+  return ret;
+
+
 }
 
 int BrickPi3::get_sensor(uint8_t port, void *value_ptr){
+  initArray(); // CBY
   uint8_t port_index;
   uint8_t msg_type;
   switch(port){
@@ -493,6 +530,15 @@ int BrickPi3::get_sensor(uint8_t port, void *value_ptr){
   if(int error = spi_transfer_array(spi_transfer_length, spi_array_out, spi_array_in)){
     return error;
   }
+#ifdef DEBUG_BS
+  printf("get sensor \n send :");
+  for (int i=0;i<20;i++)
+    printf("%x ",spi_array_out[i]);
+  printf("\nreceived :");
+  for (int i=0;i<20;i++)
+    printf("%x ",spi_array_in[i]);
+  printf("\n");
+#endif
   // If the fourth byte received is not 0xA5
   if(spi_array_in[3] != 0xA5){
     return ERROR_SPI_RESPONSE;
@@ -503,6 +549,8 @@ int BrickPi3::get_sensor(uint8_t port, void *value_ptr){
   }
   // If the sensor value(s) is not valid (still configuring the sensor, or error communicating with the sensor)
   if(spi_array_in[5] != SENSOR_STATE_VALID_DATA){
+    //for (int h=0;h<10;h++)
+     // printf("%X ",spi_array_in[h]); 
     return spi_array_in[5];
   }
 

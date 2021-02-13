@@ -25,30 +25,33 @@ int Position::initPosition(void) // voir si on l'intègre dans le constructeur
 int Position::calcPosition() // fonction récurrente
 {
 	// récupération des codeurs
-	Sen.getEncoder(&posWhlR, &posWhlL); 
+	Sen.getEncoder(&posWhlR, &posWhlL);  
 	// calcul des deltas et mémorisation
 	deltaPosWhlR = posWhlR - posWhlR_prev;
 	posWhlR_prev = posWhlR;
 	deltaPosWhlL = posWhlL - posWhlL_prev;
-	posWhlL_prev = posWhlL;
+	posWhlL_prev = posWhlL; 
 	
 	// protection débordement
-	deltaPosWhlR = modulo180(deltaPosWhlR);
-	deltaPosWhlL = modulo180(deltaPosWhlL);
+	if (Rob.isExternalEncoder()) // pour les codeurs externes, on boucle à 360
+	{
+		deltaPosWhlR = modulo180(deltaPosWhlR);
+		deltaPosWhlL = modulo180(deltaPosWhlL);
+	}
 		
 	// Calcul de vitesses
-	speedFor = (float)(deltaPosWhlR + deltaPosWhlL)*COEFF_SPD_FOR;
-	speedRot = (float)(deltaPosWhlR - deltaPosWhlL)*COEFF_SPD_ROT;
+	speedFor = (float)(deltaPosWhlR + deltaPosWhlL)*COEFF_SPD_FOR; // en mm/s
+	speedRot = (float)(deltaPosWhlR - deltaPosWhlL)*COEFF_SPD_ROT; // en °/s
 	
 	// calcul de la position
 	float deltaAng = (float) (deltaPosWhlR-deltaPosWhlL)*COEFF_ANG;
 	posAlpha = modulo180(posAlpha + deltaAng);
 	
-	float deltaX = (deltaPosWhlR+deltaPosWhlL);
+	float deltaX = (float)(deltaPosWhlR+deltaPosWhlL);
 	deltaX *= cos(DEG2RAD*(posAlpha-deltaAng/2));
 	deltaX *= COEFF_MM;
 	posX += deltaX;
-	float deltaY = (deltaPosWhlR+deltaPosWhlL);
+	float deltaY = (float)(deltaPosWhlR+deltaPosWhlL);
 	deltaY *= sin(DEG2RAD*(posAlpha-deltaAng/2));
 	deltaY *= COEFF_MM;
 	posY += deltaY;
@@ -73,5 +76,6 @@ int Position::getSpeed(float *f, float *r)
 {
 	*f=speedFor;
 	*r=speedRot;
+	printf("vit Av= %d Rot=%f\n",(int)speedFor,speedRot);
 	return 0;
 }

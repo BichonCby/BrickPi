@@ -29,11 +29,11 @@ int Emul::runEmul() // fonction appelée régulièmerement
   
   for (int i=0;i<4;i++) // attention, les ports commencent à 1
   {
-    motEmul[i].position += motEmul[i].speed * COEFF_MOT_COD;
+    motEmul[i].position += (float)(motEmul[i].speed) * COEFF_MOT_COD;
   }
   // recalculer les valeurs des codeurs, chercher quel codeur va avec quel moteur
-  codEmul[1] = motEmul[1].position; // c'est faux, il faut recalculer
-  codEmul[2] = motEmul[2].position; // c'est faux, il faut recalculer
+  codEmul[1] = (int32_t)(motEmul[1].position); // c'est faux, il faut recalculer
+  codEmul[2] = (int32_t)(motEmul[2].position); // c'est faux, il faut recalculer
   
   // pour les sonars, on verra après
   
@@ -119,7 +119,7 @@ int Emul::transact_i2c(uint8_t port, i2c_struct_t *i2c_struct){
 }
 
 int Emul::get_sensor(uint8_t port, void *value_ptr){
-
+// TODO : gérer si les codeurs sont indépendants
   if (port == Rob.encoderRight)
   {
       sensor_encoder_t *Value = (sensor_encoder_t*)value_ptr;
@@ -294,7 +294,7 @@ int Emul::set_motor_position_relative(uint8_t port, int32_t position){
 }
 
 int Emul::set_motor_dps(uint8_t port, int16_t dps){
-  motEmul[port].speed = (float)dps; // avec une rampe?
+  motEmul[port].speed = (int16_t)dps; // avec une rampe?
   //printf("consigne moteur %d = %d\n",port, dps);
   return 0;
 }
@@ -308,7 +308,7 @@ int Emul::get_motor_status(uint8_t port, uint8_t &state, int8_t &power, int32_t 
   state = motEmul[port].state;
   power = motEmul[port].power;
   dps = motEmul[port].speed;
-  position = motEmul[port].position;
+  position = (int32_t)(motEmul[port].position);
 
   return 0;
 }
@@ -319,13 +319,13 @@ int Emul::offset_motor_encoder(uint8_t port, int32_t position){
 }
 
 int Emul::reset_motor_encoder(uint8_t port){
-  motEmul[port].position = 0;
+  motEmul[port].position = 0.0;
   
   return 0;
 }
 
 int Emul::reset_motor_encoder(uint8_t port, int32_t &value){
-  motEmul[port].position = 0;
+  motEmul[port].position = 0.0;
   value = 0;
   return 0;
 }
@@ -337,12 +337,12 @@ int Emul::set_motor_encoder(uint8_t port, int32_t value){
 }
 
 int32_t Emul::get_motor_encoder(uint8_t port){
-  return motEmul[port].position;
+  return (int32_t)(motEmul[port].position);
 }
 
 int Emul::get_motor_encoder(uint8_t port, int32_t &value){
 
-  value = motEmul[port].position;
+  value = (int32_t)(motEmul[port].position);
   return 0;
 }
 

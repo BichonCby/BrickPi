@@ -20,6 +20,7 @@
 #define ID_IA 0x15
 #define ID_SENSORS 0x16
 #define ID_MOTORS 0x17
+#define ID_EMUL 0x18
 #define ID_ACK 0x90
 #define ID_NACK 0x91
 

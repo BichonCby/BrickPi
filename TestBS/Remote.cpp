@@ -105,28 +105,28 @@ int Remote::decodeFrame()
 			switch (strRead[3]) // le type de déplacement
 			{
 				case 'P':
-					itmp1 = (int)strRead[4] + ((int)(strRead[5]))*256;
-					itmp2 = (int)strRead[6] + ((int)(strRead[7]))*256;
+					itmp1 = (int16_t)((int)strRead[4] + ((int)(strRead[5]))*256);
+					itmp2 = (int16_t)((int)strRead[6] + ((int)(strRead[7]))*256);
 					Ass.goForward(itmp1,itmp2,30); // voir comment on récupère la vitesse
 					break;
 				case 'I':
-					itmp1 = (int)strRead[4] + ((int)(strRead[5]))*256;
-					itmp2 = (int)strRead[6] + ((int)(strRead[7]))*256;
+					itmp1 = (int16_t)((int)strRead[4] + ((int)(strRead[5]))*256);
+					itmp2 = (int16_t)((int)strRead[6] + ((int)(strRead[7]))*256);
 					Ass.goBackward(itmp1,itmp2,30); // voir comment on récupère la vitesse
 					break;
 				case 'R':
-					itmp1 = (int)strRead[4] + ((int)(strRead[5]))*256;
+					itmp1 = (int16_t)((int)strRead[4] + ((int)(strRead[5]))*256);
 					Ass.turn(itmp1,30); // voir comment on récupère la vitesse
 					break;
 				case 'M':
-					itmp1 = (int)strRead[4] + ((int)(strRead[5]))*256;
-					itmp2 = (int)strRead[6] + ((int)(strRead[7]))*256;
-					//printf("manuel d=%d et g=%d\n",itmp1, itmp2);
+					itmp1 = (int16_t)((int)strRead[4] + ((int)(strRead[5]))*256);
+					itmp2 = (int16_t)((int)strRead[6] + ((int)(strRead[7]))*256);
+					printf("manuel d=%d et g=%d\n",itmp1, itmp2);
 					Ass.manualSpeed(itmp1,itmp2); // voir comment on récupère la vitesse
 					break;
 				case 'N':
-					itmp1 = (int)strRead[4] + ((int)(strRead[5]))*256;
-					itmp2 = (int)strRead[6] + ((int)(strRead[7]))*256;
+					itmp1 = (int16_t)((int)strRead[4] + ((int)(strRead[5]))*256);
+					itmp2 = (int16_t)((int)strRead[6] + ((int)(strRead[7]))*256);
 					Ass.manualPower(itmp1,itmp2); // voir comment on récupère la vitesse
 					break;
 				default :
@@ -145,8 +145,11 @@ int Remote::encodeFrame(char id)
 	// l'identifiant est la question
 	// si c'est un ordre, on va répondre OK avec le numéro de l'ordre
 	// si c'est un requete de trame, on renvoie la trame
-	float val1, val2, val3;
-	int vali1;
+	float valf1, valf2, valf3;
+	int vali1, vali2;
+	int16_t vali10,vali11;
+	int32_t vali20,vali21;
+	int8_t valc1,valc2;
 	switch (id)
 	{
 		case ID_ACK :
@@ -176,22 +179,22 @@ int Remote::encodeFrame(char id)
 			strWrite[0] = ID_POSITION;
 			strWrite[1] = 10;// taille utile
 			strWrite[2] = Rob.getVersion();
-			Pos.getPosition(&val1,&val2,&val3);
-			strWrite[3] = (char) ((int)val1 & 0x00FF); // pos X poids faible
-			strWrite[4] = (char) (((int)val1)>>8 & 0x00FF); // pos X poids fort
-			strWrite[5] = (char) ((int)val2 & 0x00FF); // pos Y poids faible
-			strWrite[6] = (char) (((int)val2)>>8 & 0x00FF); // pos Y poids fort
-			strWrite[7] = (char) ((int)val3 & 0x00FF); // pos A poids faible
-			strWrite[8] = (char) (((int)val3)>>8 & 0x00FF); // pos A poids fort
-			Pos.getSpeed(&val1,&val2);
-			strWrite[9] = (char) ((int)val1 & 0x00FF); // vit longi  poids faible;
-			strWrite[10] = (char) (((int)val1)>>8 & 0x00FF); // vit longi PF
-			strWrite[11] = (char) ((int)val2 & 0x00FF); // vit rot pf
-			strWrite[12] = (char) (((int)val2)>>8 & 0x00FF); // vit rot PF
+			Pos.getPosition(&valf1,&valf2,&valf3);
+			strWrite[3] = (char) ((int)valf1 & 0x00FF); // pos X poids faible
+			strWrite[4] = (char) (((int)valf1)>>8 & 0x00FF); // pos X poids fort
+			strWrite[5] = (char) ((int)valf2 & 0x00FF); // pos Y poids faible
+			strWrite[6] = (char) (((int)valf2)>>8 & 0x00FF); // pos Y poids fort
+			strWrite[7] = (char) ((int)valf3 & 0x00FF); // pos A poids faible
+			strWrite[8] = (char) (((int)valf3)>>8 & 0x00FF); // pos A poids fort
+			Pos.getSpeed(&valf1,&valf2);
+			strWrite[9] = (char) ((int)valf1 & 0x00FF); // vit longi  poids faible;
+			strWrite[10] = (char) (((int)valf1)>>8 & 0x00FF); // vit longi PF
+			strWrite[11] = (char) ((int)valf2 & 0x00FF); // vit rot pf
+			strWrite[12] = (char) (((int)valf2)>>8 & 0x00FF); // vit rot PF
 			strWrite[13] = checkSum();
 			// ...
 			sizeWrite = strWrite[1]+4;
-			Pos.getPosition(&val1,&val2,&val3);
+			Pos.getPosition(&valf1,&valf2,&valf3);
 			//printf("pos (X,Y,A) = %f %f %f\n",val1, val2, val3);
 			//printf("posX pf %d\n",strWrite[3]);
 			//printf("posX pF %d\n",strWrite[4]);
@@ -200,25 +203,52 @@ int Remote::encodeFrame(char id)
 			strWrite[0] = ID_ASSERV;
 			strWrite[1] = 13;// taille utile
 			strWrite[2] = Rob.getVersion();
-			Ass.getTarget(&val1,&val2,&val3,&vali1);
+			Ass.getTarget(&valf1,&valf2,&valf3,&vali1);
 			strWrite[3] = (char) (vali1); // type de déplacement
-			strWrite[4] = (char) ((int)val1 & 0x00FF); // tar X poids faible
-			strWrite[5] = (char) (((int)val1)>>8 & 0x00FF); // tar X poids fort
-			strWrite[6] = (char) ((int)val2 & 0x00FF); // tar Y poids faible
-			strWrite[7] = (char) (((int)val2)>>8 & 0x00FF); // tar Y poids fort
-			strWrite[8] = (char) ((int)val3 & 0x00FF); // tar A poids faible
-			strWrite[9] = (char) (((int)val3)>>8 & 0x00FF); // tar A poids fort
-			Ass.getSpeed(&val1,&val2);
-			strWrite[10] = (char) ((int)val1 & 0x00FF); // vit longi  poids faible;
-			strWrite[11] = (char) (((int)val1)>>8 & 0x00FF); // vit longi PF
-			strWrite[12] = (char) ((int)val2 & 0x00FF); // vit rot pf
-			strWrite[13] = (char) (((int)val2)>>8 & 0x00FF); // vit rot PF
+			strWrite[4] = (char) ((int)valf1 & 0x00FF); // tar X poids faible
+			strWrite[5] = (char) (((int)valf1)>>8 & 0x00FF); // tar X poids fort
+			strWrite[6] = (char) ((int)valf2 & 0x00FF); // tar Y poids faible
+			strWrite[7] = (char) (((int)valf2)>>8 & 0x00FF); // tar Y poids fort
+			strWrite[8] = (char) ((int)valf3 & 0x00FF); // tar A poids faible
+			strWrite[9] = (char) (((int)valf3)>>8 & 0x00FF); // tar A poids fort
+			Ass.getSpeed(&valf1,&valf2);
+			strWrite[10] = (char) ((int)valf1 & 0x00FF); // vit longi  poids faible;
+			strWrite[11] = (char) (((int)valf1)>>8 & 0x00FF); // vit longi PF
+			strWrite[12] = (char) ((int)valf2 & 0x00FF); // vit rot pf
+			strWrite[13] = (char) (((int)valf2)>>8 & 0x00FF); // vit rot PF
 			strWrite[14] = (char) (Ass.isConverge()); // convergence
 			printf("conv %d %d\n",Ass.isConverge(),strWrite[14]);
 			strWrite[15] = (char) (Ass.isBlocked()); // blocage
 			strWrite[16] = checkSum();
 			sizeWrite = strWrite[1]+4;
 			break;
+		case ID_MOTORS :
+			strWrite[0] = ID_MOTORS;
+			strWrite[1] = 6;// taille utile
+			strWrite[2] = Rob.getVersion();
+			Mot.getMotorsSpeed(&vali10,&vali11);
+			strWrite[3] = (char) ((int)vali10 & 0x00FF); // tar X poids faible
+			strWrite[4] = (char) (((int)vali10)>>8 & 0x00FF); // tar X poids fort
+			strWrite[5] = (char) ((int)vali11 & 0x00FF); // tar Y poids faible
+			strWrite[6] = (char) (((int)vali11)>>8 & 0x00FF); // tar X poids fort
+			Mot.getMotorsPower(&valc1,&valc2);
+			strWrite[7] = valc1;
+			strWrite[8] = valc2;
+			strWrite[9] = checkSum();
+			sizeWrite = strWrite[1]+4;
+			break;
+		case ID_SENSORS :
+			strWrite[0] = ID_SENSORS;
+			strWrite[1] = 4;// taille utile
+			strWrite[2] = Rob.getVersion();
+			Sen.getEncoder(&vali20,&vali21);
+			strWrite[3] = (char) ((int)vali20 & 0x00FF); // codeur droit poids faible
+			strWrite[4] = (char) (((int)vali20)>>8 & 0x00FF); // codeur droit poids fort
+			strWrite[5] = (char) ((int)vali21 & 0x00FF); // codeur gauche poids faible
+			strWrite[6] = (char) (((int)vali21)>>8 & 0x00FF); // codeur gauche poids fort
+			sizeWrite = strWrite[1]+4;
+			break;
+			
 		case ID_ROBOT :
 			printf("Robot.\n");
 			strWrite[0] = ID_ROBOT;

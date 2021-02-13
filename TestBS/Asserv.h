@@ -28,14 +28,18 @@ float getSpeedForReq();
 int getTarget(float *tarX,float *tarY, float *tarA, int *typ); 
 int getSpeed(float *spdFor, float *spdRot);
 private:
+// Calibration qui seront lues dans le fichier de config
 float DIST_CONVERGE = 10; // en mm
 float ANGLE_CONVERGE = 10; // en degré
 float KP_FOR = 1;
 float KP_ROT = 1;
+float DPSROB_TO_DPSWHL = 1;
+float MMSROB_TO_DPSWHL = 1;
+// fonctions internes à la classe
 void generateVirtualSpeed(void);
 void driveWheels(void);
 int checkBlocked();
-
+// varibales internes à la classe
 float targetX;
 float targetY;
 float targetA;

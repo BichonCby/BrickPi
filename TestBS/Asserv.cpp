@@ -2,12 +2,16 @@
 
 Asserv::Asserv()
 {
-	speedForMax = 30;
-	speedRotMax = 30;
+	speedForMax = 500; // en mm/s
+	speedRotMax = 90; // en °rob par seconde
 	Conf.getConfig((char *)("KP_FOR"), &KP_FOR);
 	Conf.getConfig((char *)("KP_ROT"), &KP_ROT);
 	Conf.getConfig((char *)("ANGLE_CONVERGE"), &ANGLE_CONVERGE);
 	Conf.getConfig((char *)("DIST_CONVERGE"), &DIST_CONVERGE);
+	Conf.getConfig((char *)("DPSROB_TO_DPSWHL"), &DPSROB_TO_DPSWHL);
+	Conf.getConfig((char *)("MMSROB_TO_DPSWHL"), &MMSROB_TO_DPSWHL);
+	
+	
 }
 
 int Asserv::calcAsserv()
@@ -36,7 +40,7 @@ void Asserv::generateVirtualSpeed(void)
 		case ASS_POLAR :
 			if (abs(distance) > DIST_CONVERGE)
 			{
-				absAngle = modulo180(RAD2DEG*asinf(-deltay/distance));
+				absAngle = modulo180(RAD2DEG*asinf(deltay/distance));
 				if (targetX < curX)
 					absAngle = 180-absAngle;
 				deltaAngle = modulo180(absAngle-curA);
@@ -56,7 +60,7 @@ void Asserv::generateVirtualSpeed(void)
 		case ASS_POLARREV :
 			if (abs(distance) > DIST_CONVERGE)
 			{
-				absAngle = modulo180(RAD2DEG*asinf(-deltay/distance));
+				absAngle = modulo180(RAD2DEG*asinf(deltay/distance));
 				if (targetX < curX)
 					absAngle = 180-absAngle;
 				deltaAngle = modulo180(absAngle-curA);
@@ -99,6 +103,12 @@ void Asserv::generateVirtualSpeed(void)
 	// rotation
 	speedRotReq = KP_ROT*deltaAngle;
 	
+	// cas particulier du manuel
+	if (typeAss == ASS_MANUAL)
+	{
+		speedForReq = (float)(speedRightMan+speedRightMan)/2;
+		speedRotReq = (float)(speedRightMan-speedLeftMan);
+	}
 	// saturation des vitesses de consigne
 	speedForReq = fmaxf(fminf(speedForReq,speedForMax),-speedForMax);
 	speedRotReq = fmaxf(fminf(speedRotReq,speedRotMax),-speedRotMax);
@@ -118,7 +128,6 @@ void Asserv::generateVirtualSpeed(void)
 	}
 	else
 		converge = false;
-
 }
 
 void Asserv::driveWheels(void)
@@ -136,20 +145,20 @@ void Asserv::driveWheels(void)
 			Mot.setMotorSpeed(Rob.whlRight,0);
 			break;
 		case ASS_MANUAL :
-			Mot.setMotorSpeed(Rob.whlRight,speedRightMan);
-			Mot.setMotorSpeed(Rob.whlLeft,speedLeftMan);
+			Mot.setMotorSpeed(Rob.whlRight,speedRightMan*MMSROB_TO_DPSWHL);
+			Mot.setMotorSpeed(Rob.whlLeft,speedLeftMan*MMSROB_TO_DPSWHL);
 			break;
 		case ASS_POLAR:
 		case ASS_POLARREV:
 		case ASS_ROTATION:
 		case ASS_CIRCLE:
 			// roue droite
-			tmp = speedForReq+speedRotReq;
+			tmp = (speedForReq*MMSROB_TO_DPSWHL+speedRotReq*DPSROB_TO_DPSWHL); // en dps roue
 			// à voir pour saturer
 			// à voir pour pratiquer une rampe
 			Mot.setMotorSpeed(Rob.whlRight,(int)tmp);
 			// roue gauche
-			tmp = speedForReq-speedRotReq;
+			tmp = speedForReq*MMSROB_TO_DPSWHL-speedRotReq*DPSROB_TO_DPSWHL;
 			// à voir pour saturer
 			// à voir pour pratiquer une rampe
 			Mot.setMotorSpeed(Rob.whlLeft,(int)tmp);
@@ -158,12 +167,12 @@ void Asserv::driveWheels(void)
 			if (blockedWhl == Rob.whlLeft)
 			{
 				Mot.setMotorSpeed(Rob.whlLeft,0);
-				Mot.setMotorSpeed(Rob.whlRight,speedRotReq);
+				Mot.setMotorSpeed(Rob.whlRight,speedRotReq*DPSROB_TO_DPSWHL);
 			}
 			else
 			{
 				Mot.setMotorSpeed(Rob.whlRight,0);
-				Mot.setMotorSpeed(Rob.whlLeft,speedRotReq);
+				Mot.setMotorSpeed(Rob.whlLeft,speedRotReq*DPSROB_TO_DPSWHL);
 			}
 			break;
 	}
@@ -183,7 +192,7 @@ int Asserv::goForward(int x, int y, int speed)
 	targetY = y;
 	typeAss = ASS_POLAR;
 	speedForMax = speed;
-	speedRotMax = 30; // il faudra mettre une calibration
+	speedRotMax = 90; // il faudra mettre une calibration
 	sleepms(20); // pour être sûr que c'est pris en compte
 //	while (isConverge() == false)
 //		sleepms(20);
@@ -196,7 +205,7 @@ int Asserv::goBackward(int x, int y, int speed)
 	targetY = y;
 	typeAss = ASS_POLARREV;
 	speedForMax = speed;
-	speedRotMax = 30; // il faudra mettre une calibration
+	speedRotMax = 90; // il faudra mettre une calibration
 	sleepms(20); // pour être sûr que c'est pris en compte
 	while (isConverge() == false)
 		sleepms(20);
@@ -211,7 +220,7 @@ int Asserv::turn(int a, int speed)
 	speedRotMax = (float)speed;
 	speedForMax = 30; // il faudra mettre une calibration
 	sleepms(20); // pour être sûr que c'est pris en compte
-	printf("tarA =%d\n",(int)targetA);
+	printf("tarA =%d vmax = %f\n",(int)targetA,speedRotMax);
 //	while (isConverge() == false)
 //		usleep(20000);
 	return 0;
@@ -240,7 +249,7 @@ int Asserv::manualPower(int powerRight, int powerLeft)
 int Asserv::checkBlocked() // détection de blocage, appel régulier
 {
 	float sf,sr;
-	Pos.getSpeed(&sf,&sr);
+	//Pos.getSpeed(&sf,&sr);
 	// il faudra y mettre des calibrations de config
 	if (	(speedForReq > 30 && sf <20)
 		||	(speedForReq < -30 && sr >-20))

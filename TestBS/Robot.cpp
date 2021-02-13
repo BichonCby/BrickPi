@@ -14,6 +14,8 @@ int Robot::initRobot()
 	Conf.getConfig((char *)"ENCODER_LEFT",&val);encoderLeft = (uint8_t)val;
 	Conf.getConfig((char *)"ENCODER_RIGHT",&val);encoderRight = (uint8_t)val;
 	Conf.getConfig((char *)"SCORE_INIT",&val);score = (int)val;
+	Conf.getConfig((char *)"EXTERNAL_ENCODER",&val);externalEncoder = (bool)val;
+	
 	color = GREEN;
 	stateMatch = MATCH_PREPARE;
 	score = 0;
@@ -71,3 +73,7 @@ int Robot::getTypeMatch()
 {
 	return typeMatch;
 }	
+bool Robot::isExternalEncoder()
+{
+	return externalEncoder;
+}

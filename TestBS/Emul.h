@@ -249,8 +249,8 @@ struct sensor_infrared_t{
 };
 
 struct motEmul_t {
-	float speed;
-	float power;
+	int16_t speed;
+	int8_t power;
   float position;
   uint8_t state;
 };
@@ -339,7 +339,7 @@ class Emul{
     uint8_t I2CInBytes[4];
 
   motEmul_t motEmul[4]; // pour l'instant une seule carte BrickPi
-  int codEmul[2]; // encodeurs indépendants
+  int32_t codEmul[2]; // encodeurs indépendants ou intégrés au moteur
   int sonEmul[4]; // 4 sonars, on verra
   uint8_t touchEmul; // le touchmux (??)
 };

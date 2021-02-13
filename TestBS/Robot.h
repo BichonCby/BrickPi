@@ -34,6 +34,7 @@ int setCounter(int c);
 int incCounter();
 char getVersion();
 int getTypeMatch();
+bool isExternalEncoder();
 uint8_t whlRight; // le numéro du moteur droit
 uint8_t whlLeft; // le numéro du moteur gauche
 uint8_t encoderLeft; // le port du codeur gauche
@@ -50,7 +51,7 @@ char versionRobot;
 int typeMatch;
 int score;
 int initRobot();
-
+bool externalEncoder;
 };
 
 #endif
