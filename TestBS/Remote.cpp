@@ -77,18 +77,22 @@ int Remote::decodeFrame()
 {
 	float ftmp1,ftmp2;
 	int itmp1, itmp2;
-	//for (int j=0;j<sizeRead;j++)
-	//	printf("%x ",strRead[j]);
-	//printf("\n");
+	char ctmp1,ctmp2,ctmp3;
+	char name[50];
+	for (int j=0;j<sizeRead;j++)
+		printf("%x ",strRead[j]);
+	printf("\n");
 	if (sizeRead <3 || strRead[2] != Rob.getVersion())
 	{
-		encodeFrame(ID_NACK);
+		printf("mauvaise taille %d ou version\n",sizeRead);
+		encodeFrame(ID_NACK,ERR_VERSION);
 		return -1;
 	}
 	// vérification du CS et de la longueur
 	if ((strRead[1]+4) !=sizeRead)
 	{
-		encodeFrame(ID_NACK);
+		printf("mauvaise longueur\n");
+		encodeFrame(ID_NACK,ERR_SIZE_FRAME);
 		return -2;
 	} // a compléter par le CS
 	// décodage
@@ -102,6 +106,7 @@ int Remote::decodeFrame()
 		case ID_ORDERMOVE : // on donne un ordre de déplacement 
 			// on va traiter l'ordre, une fois qu'on saura comment faire
 			//printf("ordre reçu\n");
+			Rob.setTypeMatch(TYPE_REMOTE); // si on donne un ordre, on prend la main
 			switch (strRead[3]) // le type de déplacement
 			{
 				case 'P':
@@ -129,27 +134,74 @@ int Remote::decodeFrame()
 					itmp2 = (int16_t)((int)strRead[6] + ((int)(strRead[7]))*256);
 					Ass.manualPower(itmp1,itmp2); // voir comment on récupère la vitesse
 					break;
+				case 'S': // stop robot
+					Ass.stopRobot();
+					break;
 				default :
+					encodeFrame(ID_NACK,ERR_BAD_MOVE);
+					return -1*(int)ERR_BAD_MOVE;
 					break;
 			}
 			encodeFrame(ID_ACK);
 			break;
+		case ID_PARAM : // on va demander un truc sur la calibration
+			printf("param %c\n",strRead[4]);
+			if (strRead[4] == 'S') // on impose une nouvelle valeur
+			{
+				sscanf(strRead,"%c%c%cCS %s %f",&ctmp1,&ctmp2,&ctmp3,name,&ftmp1);
+				printf ("demande de passer %s à la valeur %f\n",name,ftmp1);
+				if (Conf.setConfig(name,ftmp1)==-1)
+				{
+					printf("Mauvais paramètre demandé\n");
+					encodeFrame(ID_NACK,ERR_PARAM_NAME);
+					return -1*(int)ERR_PARAM_NAME;
+				}
+			}
+			else if (strRead[4] == 'G') // on récupère une valeur
+			{
+				sscanf(strRead,"%c%c%cCG %s",&ctmp1,&ctmp2,&ctmp3,name);
+				printf ("demande de récupérer %s \n",name);
+				if(Conf.getConfig(name,&calibf) >= 0)
+				{ // récupération dans calibf
+					encodeFrame(ID_CALGET);
+					return 0;
+				}
+				encodeFrame(ID_NACK,ERR_PARAM_NAME);
+				return -1*(int)ERR_PARAM_NAME;
+			}
+			else if (strRead[4] == 'W') // on écrit le fichier
+			{
+				sscanf(strRead,"CS %s %f",name,&ftmp1);
+				printf ("demande d'écriture du fichier\n");
+				Conf.writeConfig();
+			}
+			else
+			{
+				encodeFrame(ID_NACK,ERR_PARAM_REQ);
+				return -1*(int)ERR_PARAM_REQ;
+			}
+			encodeFrame(ID_ACK);
+			break;
 		default : // on ne connait pas la trame
+			encodeFrame(ID_NACK,ERR_BAD_ID);
 			printf("Trame reçue inconnue\n");
+			return -1*(int)ERR_BAD_ID;
+			break;
 	}
 	return 0;
 }
 
-int Remote::encodeFrame(char id)
+int Remote::encodeFrame(char id, char err)
 {
 	// l'identifiant est la question
 	// si c'est un ordre, on va répondre OK avec le numéro de l'ordre
 	// si c'est un requete de trame, on renvoie la trame
 	float valf1, valf2, valf3;
-	int vali1, vali2;
+	int vali1, vali2,i;
 	int16_t vali10,vali11;
 	int32_t vali20,vali21;
 	int8_t valc1,valc2;
+	char calstr[20];
 	switch (id)
 	{
 		case ID_ACK :
@@ -170,7 +222,7 @@ int Remote::encodeFrame(char id)
 			strWrite[2] = Rob.getVersion();
 			strWrite[3] = strRead[3]; // l'odre donné
 			
-			strWrite[4] = ACK_OK; // pour l'instant tout est OK
+			strWrite[4] = err; // pour l'instant tout est OK
 			strWrite[5] = checkSum();
 			sizeWrite = strWrite[1]+4;
 			break;
@@ -252,15 +304,33 @@ int Remote::encodeFrame(char id)
 		case ID_ROBOT :
 			printf("Robot.\n");
 			strWrite[0] = ID_ROBOT;
-			strWrite[1] = 4;// taille utile
+			strWrite[1] = 5;// taille utile 
 			strWrite[2] = Rob.getVersion();
 			strWrite[3] = (char) (Rob.getStateMatch()); // etat 
 			strWrite[4] = (char) (Rob.getColor()); // couleur
-			strWrite[5] = (char) (Rob.getCounter()); // durée dans le match
-			strWrite[6] = (char) (Rob.getTypeMatch()); // type de match
-			strWrite[7] = (char) (Rob.getScore()); // score
-			strWrite[8] = checkSum();
+			strWrite[5] = (char) (Rob.getCounter()& 0x00FF); // durée dans le match
+			strWrite[6] = (char) (Rob.getCounter()>>8 & 0x00FF); // durée dans le match
+			strWrite[7] = (char) (Rob.getTypeMatch()); // type de match
+			strWrite[8] = (char) (Rob.getScore()); // score
+			strWrite[9] = checkSum();
 			sizeWrite = strWrite[1]+4;
+			//printf("count : %.2f s score = %d\n",(float)(Rob.getCounter())/50,(char)(Rob.getScore()));
+			break;
+		case ID_CALGET : // récupération de la calibration demandée
+			printf("calib %f\n",calibf);
+			sprintf(calstr,"%f",calibf);
+			printf("soit %s\n",calstr);
+			strWrite[0] = ID_CALGET;
+			//strWrite[1] = 5;// taille utile 
+			strWrite[2] = Rob.getVersion();
+			for (i=0;i<strlen(calstr);i++)
+			{
+				strWrite[i+3] = calstr[i];
+			}
+			strWrite[i+4] = checkSum();
+			strWrite[1] = i+1;
+			sizeWrite = strWrite[1]+4;
+			break;
 	}
 	return 0;
 	

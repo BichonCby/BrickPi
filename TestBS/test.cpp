@@ -43,9 +43,10 @@ void *stopstart( void*)
     while (Rob.getCounter() < DURATION_MATCH && !BAU)
     {
       Rob.incCounter();
-      sleepms(100); // boucle 100ms
+      sleepms(20); // boucle 100ms
     }
-    Rob.setStateMatch(MATCH_END); // en fait ça sera funny ou display
+    printf("Fin du match\n");
+    Rob.setStateMatch(MATCH_DISPLAY); // en fait ça sera funny ou display
    // return;
 }
 sensor_ultrasonic_t sonar;
@@ -71,25 +72,11 @@ void * seq20ms(void *)
 #ifdef EMULATOR
     BP.runEmul();
 #endif
+    //test
     Sen.readEncoder();
-    //Sen.getSonar(PORT_1);
-    //   if(BP.get_sensor(PORT_1, &sonar)){
-    //  printf("erreur");
-    //}else{
-    //  printf("Ultrasonic sensor (S1): CM %5.1f Inches %5.1f  \n", sonar.cm, sonar.inch);
-    //}
-    
-    //printf(" %5.1f cm \n", Sen.getSonar(PORT_1));
-    //std::cout << ;
-    //   Sen.getEncoder(1,2);
-    //std::cout << ".";//Rob.getCounter();
-    //fflush(stdout);
-
-    //Mot.setMotorPower(1,30);
-    //BP.set_motor_dps(PORT_A,rot);
-    //BP.set_led(led);
     // la séquence en elle même
  //   printf("1");
+    Det.detect();
     Pos.calcPosition();
     Ass.calcAsserv();
     Act.calcAction();
@@ -111,7 +98,6 @@ int main(int argc, char **argv)
   pthread_create(&stt,NULL,&stopstart,NULL);
   pthread_create(&stra,NULL,&strategy,NULL);
   pthread_create(&remt,NULL,&remotecontrol,NULL);
-  
   //BP.set_sensor_type(PORT_1, SENSOR_TYPE_NXT_ULTRASONIC);
 
   while (Rob.getStateMatch() != MATCH_END)
@@ -123,9 +109,6 @@ int main(int argc, char **argv)
     pthread_detach(seq); // pour libérer la pile
     sleepms(20); //20ms c'est le temps de la séquence
    
-  //  if (seq != (pthread_t)NULL)
-  //      printf("non nul\n");
-    //usleep(1000000);
   }
   BP.reset_all(); 
   std::cout << "\nFin du programme";

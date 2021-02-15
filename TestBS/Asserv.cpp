@@ -36,6 +36,7 @@ void Asserv::generateVirtualSpeed(void)
 	{
 		case ASS_NUL :
 			distance = 0;
+			deltaAngle = 0;
 			break;
 		case ASS_POLAR :
 			if (abs(distance) > DIST_CONVERGE)
@@ -137,6 +138,8 @@ void Asserv::driveWheels(void)
 	{
 		case ASS_NUL :
 		default :
+			Mot.setMotorSpeed(Rob.whlLeft,0);
+			Mot.setMotorSpeed(Rob.whlRight,0);
 			Mot.setMotorPower(Rob.whlLeft,0);
 			Mot.setMotorPower(Rob.whlRight,0);
 			break;
@@ -194,9 +197,11 @@ int Asserv::goForward(int x, int y, int speed)
 	speedForMax = speed;
 	speedRotMax = 90; // il faudra mettre une calibration
 	sleepms(20); // pour être sûr que c'est pris en compte
-//	while (isConverge() == false)
-//		sleepms(20);
-//	return 0;
+	while (!isConverge() && !Det.isObstacle() && Rob.getTypeMatch() != TYPE_REMOTE)
+		sleepms(20);
+	if (Det.isObstacle())
+		return -1; // détection
+	return 0;
 }
 int Asserv::goBackward(int x, int y, int speed)
 {
@@ -246,6 +251,12 @@ int Asserv::manualPower(int powerRight, int powerLeft)
 	Mot.setMotorPower(Rob.whlRight,powerRight);
 }
 
+int Asserv::stopRobot()
+{
+	typeAss = ASS_NUL;
+	speedLeftMan =0; // utile?
+	speedRightMan = 0; // utile?
+}
 int Asserv::checkBlocked() // détection de blocage, appel régulier
 {
 	float sf,sr;

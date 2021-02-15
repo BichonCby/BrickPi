@@ -33,7 +33,7 @@ int Config::readConfig()
 			if (strstr(ligne,"//")!=NULL)
 				strcpy(elConf[idx].comment,strstr(ligne,"//"));
 			else
-				strcpy(elConf[idx].comment,"//");
+				strcpy(elConf[idx].comment,"//\n");
 			//char *tmp=ligne+strstr(ligne,"//");
 			//strcpy(elConf[idx].comment,((char*)ligne)+strstr(ligne,"//"));
 			strcpy(elConf[idx].category,categ);
@@ -41,13 +41,11 @@ int Config::readConfig()
 		}
 	}
 	nbConf=idx;
-//	printf("%s = %f %s\n",elConf[0].name, elConf[0].val, elConf[0].comment);
-//	printf("%s = %f %s\n",elConf[1].name, elConf[1].val, elConf[1].comment);
     fclose(pfile);
     return 0;
 }
 int Config::setConfig(char *nom,float v)
-{
+{	
 	for (int i = 0; i<nbConf;i++)
 	{
 		if (strcmp(nom,elConf[i].name) == 0)
@@ -82,7 +80,7 @@ int Config::writeConfig()
 		if (strcmp(elConf[i].category,cat)) // c'est different
 			fprintf( pfile,"\n%s\n\n",elConf[i].category);
 		strcpy(cat,elConf[i].category);
-		fprintf(pfile,"%s = %f\n",elConf[i].name,elConf[i].val);
+		fprintf(pfile,"%s = %f %s",elConf[i].name,elConf[i].val,elConf[i].comment);
 	}
 	fclose(pfile);
 	return 0;

@@ -10,8 +10,8 @@ log
 //actions
 sémaphores pour les types de déplacement
 Passer les unités de rotation en 0.1°/s pour les transferts pipe??
-
-
+intégrer des trames de détections pour l'émulateur
+dans l'émulateur, gérer les sonars branchés directement
 A tester
 
 pilotage manuel des roues

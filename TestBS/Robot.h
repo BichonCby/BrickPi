@@ -1,6 +1,6 @@
 #ifndef __Robot_h__
 #define __Robot_h__
-#define DURATION_MATCH 1000 // en 100 ms
+#define DURATION_MATCH 5000 // en 20 ms
 
 #define GREEN 0
 #define BLUE 1
@@ -16,6 +16,10 @@
 #define MATCH_DISPLAY 4
 #define MATCH_END 5
 
+#define TYPE_NORMAL 0
+#define TYPE_REMOTE 1
+#define TYPE_HOMOLO 2
+
 #define TIRETTE Sen.getTouch(1)
 #define BAU Sen.getTouch(2)
 
@@ -24,15 +28,16 @@ public:
 Robot(void); // constructeur
 int getColor();// 
 int setColor(int color);
-int getScore();
-int setScore(int s);
-int addScore(int s);
+uint8_t getScore();
+uint8_t setScore(int s);
+uint8_t addScore(int s);
 int setStateMatch(int st);
 int getStateMatch();
 int getCounter();
 int setCounter(int c);
 int incCounter();
 char getVersion();
+int setTypeMatch(int t);
 int getTypeMatch();
 bool isExternalEncoder();
 uint8_t whlRight; // le numéro du moteur droit
@@ -49,7 +54,7 @@ int stateMatch;
 int counterMatch;
 char versionRobot;
 int typeMatch;
-int score;
+uint8_t score;
 int initRobot();
 bool externalEncoder;
 };

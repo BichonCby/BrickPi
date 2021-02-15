@@ -16,17 +16,20 @@ class Asserv{
 public:
 Asserv(void); // constructeur
 int calcAsserv(); // fonction appelée dans la séquence 20ms
-bool isConverge(); // indique si l'on est convergé
-bool isBlocked(); // indique un blocage confirmé du robot
+// Fonctions de demande de déplacement
 int goForward(int x, int y, int speed); // primitive polaire avec cible
 int goBackward(int x, int y, int speed);  // primitive polaire à l'envers avec cible
 int turn(int angle, int speed); // rotation jusqu'à l'angle défini
 int pivot(uint8_t blkWhl,uint8_t dir, int angle);
 int manualSpeed(int spdRight, int spdLeft);
 int manualPower(int powerRight, int powerLeft);
+int stopRobot(); // pour demander un déplacement nul
+// accesseurs
 float getSpeedForReq();
 int getTarget(float *tarX,float *tarY, float *tarA, int *typ); 
 int getSpeed(float *spdFor, float *spdRot);
+bool isConverge(); // indique si l'on est convergé
+bool isBlocked(); // indique un blocage confirmé du robot
 private:
 // Calibration qui seront lues dans le fichier de config
 float DIST_CONVERGE = 10; // en mm

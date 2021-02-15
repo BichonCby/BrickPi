@@ -34,18 +34,19 @@ int Robot::setColor(int c)
 	color = c;
 	return 0;
 }
-int Robot::getScore()
+uint8_t Robot::getScore()
 {
+	//printf("score = %d\n",score);
+	return (uint8_t)score;
+}
+uint8_t Robot::setScore(int s)
+{
+	score = (uint8_t)s;
 	return score;
 }
-int Robot::setScore(int s)
+uint8_t Robot::addScore(int s)
 {
-	score = s;
-	return score;
-}
-int Robot::addScore(int s)
-{
-	score += s;
+	score += (uint8_t)s;
 	return score;
 }
 int Robot::setStateMatch(int st)
@@ -72,6 +73,11 @@ int Robot::incCounter()
 int Robot::getTypeMatch()
 {
 	return typeMatch;
+}	
+int Robot::setTypeMatch(int t)
+{
+	typeMatch = t;
+	return 0;
 }	
 bool Robot::isExternalEncoder()
 {
