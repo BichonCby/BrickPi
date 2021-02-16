@@ -6,14 +6,21 @@ Detection::Detection()
 
 int Detection::detect() // fonction appelée régulièrement
 {
+	uint8_t distFrR=255;
+	uint8_t distFrL=255;
+	uint8_t distReR=255;
+	uint8_t distReL=255;
 	// récupération des valeurs des sonars
 	// on suppose que l'on a 2 devant et 2 derrière, mais ça peut être configurable
-	
-	uint8_t distFrR = Sen.getSonar(Rob.sonFrRight);
-	uint8_t distFrL = Sen.getSonar(Rob.sonFrLeft);
-	uint8_t distReR = Sen.getSonar(Rob.sonReRight);
-	uint8_t distReL = Sen.getSonar(Rob.sonReLeft);
-	
+	if (Rob.getNbSonar(SIDE_FRONT)>0)
+		distFrL = Sen.getSonar(Rob.sonFrLeft); // le gauche d'abord
+	if (Rob.getNbSonar(SIDE_FRONT)>1)
+		distFrR = Sen.getSonar(Rob.sonFrRight);
+	if (Rob.getNbSonar(SIDE_REAR)>0)
+		distReL = Sen.getSonar(Rob.sonReLeft);
+	if (Rob.getNbSonar(SIDE_REAR)>1)
+		distReR= Sen.getSonar(Rob.sonReRight);
+//	printf("sonars %d %d %d %d\n",Rob.sonFrLeft,distFrL,Rob.sonReLeft,distReL);
 	// il faut vérifier sonar par sonar que l'on ne détecte pas en dehors de la table
 	
 	// ensuite on renvoie le booléen de détection
@@ -29,5 +36,6 @@ int Detection::detect() // fonction appelée régulièrement
 
 bool Detection::isObstacle()
 {
+	//return false;
 	return obstacle;
 }

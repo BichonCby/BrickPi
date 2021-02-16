@@ -15,10 +15,17 @@ int Robot::initRobot()
 	Conf.getConfig((char *)"ENCODER_RIGHT",&val);encoderRight = (uint8_t)val;
 	Conf.getConfig((char *)"SCORE_INIT",&val);score = (int)val;
 	Conf.getConfig((char *)"EXTERNAL_ENCODER",&val);externalEncoder = (bool)val;
+	Conf.getConfig((char *)"NUMBER_FRONT_SONAR",&val);nbFrSonar = (uint8_t)val;
+	Conf.getConfig((char *)"NUMBER_REAR_SONAR",&val);nbReSonar = (uint8_t)val;
+	Conf.getConfig((char *)"SONAR_FRONT_LEFT",&val);sonFrLeft = (uint8_t)val;
+	Conf.getConfig((char *)"SONAR_FRONT_RIGHT",&val);sonFrRight = (uint8_t)val;
+	Conf.getConfig((char *)"SONAR_REAR_LEFT",&val);sonReLeft = (uint8_t)val;
+	Conf.getConfig((char *)"SONAR_REAR_RIGHT",&val);sonReRight = (uint8_t)val;
 	
-	color = GREEN;
+	color = GREEN; // sera à lire sur le contacteur
 	stateMatch = MATCH_PREPARE;
-	score = 0;
+	typeMatch = TYPE_NORMAL;
+	//score = 0;
 	counterMatch = 0;
 }
 char Robot::getVersion()
@@ -82,4 +89,12 @@ int Robot::setTypeMatch(int t)
 bool Robot::isExternalEncoder()
 {
 	return externalEncoder;
+}
+uint8_t Robot::getNbSonar(int side)
+{
+	if (side == SIDE_FRONT)
+		return nbFrSonar;
+	if (side == SIDE_REAR)
+		return nbReSonar;
+	return 0;
 }

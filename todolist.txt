@@ -1,20 +1,21 @@
 A coder 
 
-Emulateur => implémenter les codeurs indépendants VS codeurs intégrés
-différents type de déplacement
+//Emulateur => implémenter les codeurs indépendants VS codeurs intégrés
+//différents type de déplacement
 détection, comment l'intégrer
 stratégie, comment ne pas bloquer et en même temps autoriser le remote?
 capteurs contact
-communication debug
+//communication debug
 log
 //actions
 sémaphores pour les types de déplacement
 Passer les unités de rotation en 0.1°/s pour les transferts pipe??
 intégrer des trames de détections pour l'émulateur
 dans l'émulateur, gérer les sonars branchés directement
+//gérer les codeurs des moteurs, non indépendants
 A tester
 
-pilotage manuel des roues
+//pilotage manuel des roues
 codeurs Lego
 différents actionneurs
 contacteurs (tirette, BAU, couleur)

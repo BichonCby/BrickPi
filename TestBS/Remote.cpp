@@ -79,9 +79,9 @@ int Remote::decodeFrame()
 	int itmp1, itmp2;
 	char ctmp1,ctmp2,ctmp3;
 	char name[50];
-	for (int j=0;j<sizeRead;j++)
-		printf("%x ",strRead[j]);
-	printf("\n");
+//	for (int j=0;j<sizeRead;j++)
+//		printf("%x ",strRead[j]);
+//	printf("\n");
 	if (sizeRead <3 || strRead[2] != Rob.getVersion())
 	{
 		printf("mauvaise taille %d ou version\n",sizeRead);
@@ -247,7 +247,7 @@ int Remote::encodeFrame(char id, char err)
 			// ...
 			sizeWrite = strWrite[1]+4;
 			Pos.getPosition(&valf1,&valf2,&valf3);
-			//printf("pos (X,Y,A) = %f %f %f\n",val1, val2, val3);
+			printf("pos (X,Y,A) = %d %d %d\n",(int)valf1, (int)valf2, (int)valf3);
 			//printf("posX pf %d\n",strWrite[3]);
 			//printf("posX pF %d\n",strWrite[4]);
 			break;
@@ -264,12 +264,13 @@ int Remote::encodeFrame(char id, char err)
 			strWrite[8] = (char) ((int)valf3 & 0x00FF); // tar A poids faible
 			strWrite[9] = (char) (((int)valf3)>>8 & 0x00FF); // tar A poids fort
 			Ass.getSpeed(&valf1,&valf2);
+			printf("asser Vlongi = %d Vrot = %d\n",(int)valf1,(int)valf2);
 			strWrite[10] = (char) ((int)valf1 & 0x00FF); // vit longi  poids faible;
 			strWrite[11] = (char) (((int)valf1)>>8 & 0x00FF); // vit longi PF
 			strWrite[12] = (char) ((int)valf2 & 0x00FF); // vit rot pf
 			strWrite[13] = (char) (((int)valf2)>>8 & 0x00FF); // vit rot PF
 			strWrite[14] = (char) (Ass.isConverge()); // convergence
-			printf("conv %d %d\n",Ass.isConverge(),strWrite[14]);
+		//	printf("conv %d %d\n",Ass.isConverge(),strWrite[14]);
 			strWrite[15] = (char) (Ass.isBlocked()); // blocage
 			strWrite[16] = checkSum();
 			sizeWrite = strWrite[1]+4;
@@ -294,6 +295,7 @@ int Remote::encodeFrame(char id, char err)
 			strWrite[1] = 4;// taille utile
 			strWrite[2] = Rob.getVersion();
 			Sen.getEncoder(&vali20,&vali21);
+			printf("codeurs D : %d  G : %d\n",vali20,vali21);
 			strWrite[3] = (char) ((int)vali20 & 0x00FF); // codeur droit poids faible
 			strWrite[4] = (char) (((int)vali20)>>8 & 0x00FF); // codeur droit poids fort
 			strWrite[5] = (char) ((int)vali21 & 0x00FF); // codeur gauche poids faible

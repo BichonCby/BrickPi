@@ -7,7 +7,8 @@ IA::IA()
 
 int IA::launchIA()
 {
-	//DoSquare();
+	DoNothing(5000);
+	DoSquare();
 	DoNothing(100000);
 	
 	//DoSquare();
@@ -15,15 +16,15 @@ int IA::launchIA()
 }
 void IA::DoSquare()
 {
-	Ass.goForward(200,0,30);
+	Ass.goForward(1200,0,100);
 	Ass.turn(90,30);
-	Ass.goForward(200,200,30);
-	Ass.turn(90,30);
-	Ass.goForward(0,200,30);
+	Ass.goForward(1200,200,100);
+	Ass.turn(180,30);
+	Ass.goForward(1000,200,100);
 	Act.OpenArms();
-	Ass.turn(90,30);
-	Ass.goForward(0,0,30);
-	Ass.turn(90,30);
+	Ass.turn(-90,30);
+	Ass.goForward(1000,0,100);
+	Ass.turn(0,30);
 	return;
 }
 void IA::DoNothing(int t)

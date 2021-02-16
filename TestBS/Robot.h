@@ -20,6 +20,11 @@
 #define TYPE_REMOTE 1
 #define TYPE_HOMOLO 2
 
+#define SIDE_FRONT 1
+#define SIDE_REAR 2
+#define SIDE_LEFT 3
+#define SIDE_RIGHT 4
+
 #define TIRETTE Sen.getTouch(1)
 #define BAU Sen.getTouch(2)
 
@@ -40,6 +45,7 @@ char getVersion();
 int setTypeMatch(int t);
 int getTypeMatch();
 bool isExternalEncoder();
+uint8_t getNbSonar(int side);
 uint8_t whlRight; // le numéro du moteur droit
 uint8_t whlLeft; // le numéro du moteur gauche
 uint8_t encoderLeft; // le port du codeur gauche
@@ -57,6 +63,9 @@ int typeMatch;
 uint8_t score;
 int initRobot();
 bool externalEncoder;
+uint8_t nbFrSonar; // nombre de sonars à l'avant
+uint8_t nbReSonar; // nombre de sonars à l'avant
+
 };
 
 #endif

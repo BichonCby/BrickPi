@@ -212,8 +212,10 @@ int Asserv::goBackward(int x, int y, int speed)
 	speedForMax = speed;
 	speedRotMax = 90; // il faudra mettre une calibration
 	sleepms(20); // pour être sûr que c'est pris en compte
-	while (isConverge() == false)
+	while (!isConverge() && !Det.isObstacle() && Rob.getTypeMatch() != TYPE_REMOTE)
 		sleepms(20);
+	if (Det.isObstacle())
+		return -1; // détection
 	return 0;
 }
 int Asserv::turn(int a, int speed)
@@ -225,9 +227,11 @@ int Asserv::turn(int a, int speed)
 	speedRotMax = (float)speed;
 	speedForMax = 30; // il faudra mettre une calibration
 	sleepms(20); // pour être sûr que c'est pris en compte
-	printf("tarA =%d vmax = %f\n",(int)targetA,speedRotMax);
-//	while (isConverge() == false)
-//		usleep(20000);
+	//printf("tarA =%d vmax = %f\n",(int)targetA,speedRotMax);
+	while (!isConverge() && !Det.isObstacle() && Rob.getTypeMatch() != TYPE_REMOTE)
+		sleepms(20);
+	if (Det.isObstacle())
+		return -1; // détection
 	return 0;
 }
 int Asserv::pivot(uint8_t blkWhl,uint8_t dir, int angle)
@@ -235,8 +239,10 @@ int Asserv::pivot(uint8_t blkWhl,uint8_t dir, int angle)
 	blockedWhl = blkWhl;
 	typeAss = ASS_PIVOT;
 	sleepms(20);
-	while(isConverge() == false)
+	while (!isConverge() && !Det.isObstacle() && Rob.getTypeMatch() != TYPE_REMOTE)
 		sleepms(20);
+	if (Det.isObstacle())
+		return -1; // détection
 	return 0;
 }
 int Asserv::manualSpeed(int spdRight, int spdLeft)
@@ -293,13 +299,13 @@ int Asserv::getTarget(float *tarX,float *tarY, float *tarA, int *typ)
 	*tarY=targetY;
 	*tarA=targetA;
 	*typ=typeAss;
-	printf("targetA = %d\n",(int)targetA);
+	//printf("targetA = %d\n",(int)targetA);
 	return 0;
 }
 int Asserv::getSpeed(float *spdFor, float *spdRot)
 {
 	*spdFor=speedForReq;
 	*spdRot=speedRotReq;
-	printf("spdRot = %d\n",(int)(speedRotReq));
+	//printf("spdRot = %d\n",(int)(speedRotReq));
 	return 0;
 }

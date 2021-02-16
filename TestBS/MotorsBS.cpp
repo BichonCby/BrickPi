@@ -27,7 +27,7 @@ int MotorsBS::getMotorsSpeed(int16_t *spdLeft,int16_t *spdRight)
 {
 	*spdLeft = speedLeft;
 	*spdRight = speedRight;
-	printf("vit D= %d G=%d\n",speedRight,speedLeft);
+	printf("motors speed D= %d G=%d\n",speedRight,speedLeft);
 	return 0;
 }
 int MotorsBS::getMotorsPower(int8_t *powLeft,int8_t *powRight)

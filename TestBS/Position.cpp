@@ -70,12 +70,13 @@ int Position::getPosition(float *x, float *y, float *a)
 	*x=posX;
 	*y=posY;
 	*a=posAlpha;
+	//printf("position (%d,%d,%d)\n",(int)posX,int(posY),(int)posAlpha);
 	return 0;
 }
 int Position::getSpeed(float *f, float *r)
 {
 	*f=speedFor;
 	*r=speedRot;
-	printf("vit Av= %d Rot=%f\n",(int)speedFor,speedRot);
+//	printf("vit Av= %d Rot=%f\n",(int)speedFor,speedRot);
 	return 0;
 }

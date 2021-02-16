@@ -7,11 +7,11 @@ Emul BP;
 #else
 BrickPi3 BP;
 #endif
+Robot Rob;
 Sensors Sen;
 MotorsBS Mot;
 Position Pos;
 Asserv Ass;
-Robot Rob;
 IA MyIA;
 Action Act;
 Remote Rem;
@@ -47,6 +47,7 @@ void *stopstart( void*)
     }
     printf("Fin du match\n");
     Rob.setStateMatch(MATCH_DISPLAY); // en fait ça sera funny ou display
+    Ass.stopRobot();
    // return;
 }
 sensor_ultrasonic_t sonar;

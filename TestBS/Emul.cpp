@@ -109,7 +109,8 @@ int Emul::get_voltage_battery(float &voltage){
 }
 
 int Emul::set_sensor_type(uint8_t port, uint8_t type, uint16_t flags, i2c_struct_t *i2c_struct){
-   
+    SensorType[port]=type; 
+    //printf("type sensor %d type %d\n",port,SensorType[port]);
   return 0;
 }
 
@@ -120,17 +121,22 @@ int Emul::transact_i2c(uint8_t port, i2c_struct_t *i2c_struct){
 
 int Emul::get_sensor(uint8_t port, void *value_ptr){
 // TODO : gérer si les codeurs sont indépendants
-  if (port == Rob.encoderRight)
+     // printf("get sensor %d type %d\n",port,SensorType[port]);
+  if (SensorType[port] == SENSOR_TYPE_I2C && port == Rob.encoderRight)
   {
       sensor_encoder_t *Value = (sensor_encoder_t*)value_ptr;
       Value->angle = codEmul[1];
   }
-  if (port == Rob.encoderLeft)
+  if (SensorType[port] == SENSOR_TYPE_I2C && port == Rob.encoderLeft)
   {
       sensor_encoder_t *Value = (sensor_encoder_t*)value_ptr;
       Value->angle = codEmul[2];
   }
-    
+  if (SensorType[port] == SENSOR_TYPE_NXT_ULTRASONIC)
+  {
+      sensor_ultrasonic_t *Value = (sensor_ultrasonic_t*)value_ptr;
+      Value->cm = 200; //pour l'instant
+  }
   // Get some commonly used values
 /*  uint8_t  raw_value_8 = spi_array_in[6];
   uint16_t raw_value_16 = ((spi_array_in[6] << 8) | spi_array_in[7]);
