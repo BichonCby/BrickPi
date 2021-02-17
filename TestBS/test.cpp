@@ -35,11 +35,13 @@ void *stopstart( void*)
     // si BAU enclenché ou tirette non mise, on gueule
     Rob.setCounter(0);
     //~ // on attend la tirette
+    printf("tirette\n");
     while (TIRETTE)
     {
         sleepms(100); // boucle 100ms
     }
     // on lance la tempo 
+    printf("BAU\n");
     while (Rob.getCounter() < DURATION_MATCH && !BAU)
     {
       Rob.incCounter();
@@ -96,6 +98,8 @@ int main(int argc, char **argv)
 //  return 0;
     sleepms(20); //20ms c'est le temps de la séquence
   BP.detect(); // Make sure that the BrickPi3 is communicating and that the firmware is compatible with the drivers.
+    wiringPiSetup();
+
   pthread_create(&stt,NULL,&stopstart,NULL);
   pthread_create(&stra,NULL,&strategy,NULL);
   pthread_create(&remt,NULL,&remotecontrol,NULL);

@@ -1,6 +1,9 @@
 
-#include "Emul.h"
+//#include "Emul.h"
 #include "mainBS.h"
+#ifdef EMULATOR
+// pour donner le num (0 3) en fonction du port(0x01 0x08)
+#define   rev(port) (port==1)?0:((port==2)?1:((port==4)?2:3))
 
 Emul::Emul(uint8_t addr){
 
@@ -11,7 +14,7 @@ Emul::Emul(uint8_t addr){
     motEmul[i].power = 0;
     motEmul[i].speed = 0;
     motEmul[i].state = 0; //ah bon?
-    sonEmul[i] = 255; // pas de détection
+    sonEmul[i] = 255-i; // pas de détection
   }
   codEmul[1] = 0;
   codEmul[2] = 0;
@@ -40,6 +43,18 @@ int Emul::runEmul() // fonction appelée régulièmerement
   // pour le tchmux aussi
   
   return 0;
+}
+
+int Emul::changeObstacle()
+{
+    for (int i=0;i<4;i++)
+    {
+      if (sonEmul[i] == 0)
+        sonEmul[i] = 255-i;
+      else
+        sonEmul[i] = 0;
+    }
+    return 0;
 }
 int Emul::detect(bool critical){
   
@@ -135,7 +150,7 @@ int Emul::get_sensor(uint8_t port, void *value_ptr){
   if (SensorType[port] == SENSOR_TYPE_NXT_ULTRASONIC)
   {
       sensor_ultrasonic_t *Value = (sensor_ultrasonic_t*)value_ptr;
-      Value->cm = 200; //pour l'instant
+      Value->cm = sonEmul[rev(port)]; //pour l'instant
   }
   // Get some commonly used values
 /*  uint8_t  raw_value_8 = spi_array_in[6];
@@ -300,7 +315,7 @@ int Emul::set_motor_position_relative(uint8_t port, int32_t position){
 }
 
 int Emul::set_motor_dps(uint8_t port, int16_t dps){
-  motEmul[port].speed = (int16_t)dps; // avec une rampe?
+  motEmul[rev(port)].speed = (int16_t)dps; // avec une rampe?
   //printf("consigne moteur %d = %d\n",port, dps);
   return 0;
 }
@@ -311,44 +326,44 @@ int Emul::set_motor_limits(uint8_t port, uint8_t power, uint16_t dps){
 }
 
 int Emul::get_motor_status(uint8_t port, uint8_t &state, int8_t &power, int32_t &position, int16_t &dps){
-  state = motEmul[port].state;
-  power = motEmul[port].power;
-  dps = motEmul[port].speed;
-  position = (int32_t)(motEmul[port].position);
+  state = motEmul[rev(port)].state;
+  power = motEmul[rev(port)].power;
+  dps = motEmul[rev(port)].speed;
+  position = (int32_t)(motEmul[rev(port)].position);
 
   return 0;
 }
 
 int Emul::offset_motor_encoder(uint8_t port, int32_t position){
-  motEmul[port].position += position;
+  motEmul[rev(port)].position += position;
   return 0;
 }
 
 int Emul::reset_motor_encoder(uint8_t port){
-  motEmul[port].position = 0.0;
+  motEmul[rev(port)].position = 0.0;
   
   return 0;
 }
 
 int Emul::reset_motor_encoder(uint8_t port, int32_t &value){
-  motEmul[port].position = 0.0;
+  motEmul[rev(port)].position = 0.0;
   value = 0;
   return 0;
 }
 
 int Emul::set_motor_encoder(uint8_t port, int32_t value){
   // A verfifier ce que doit faire la fonction !!
-  motEmul[port].position = value;
+  motEmul[rev(port)].position = value;
   return 0;
 }
 
 int32_t Emul::get_motor_encoder(uint8_t port){
-  return (int32_t)(motEmul[port].position);
+  return (int32_t)(motEmul[rev(port)].position);
 }
 
 int Emul::get_motor_encoder(uint8_t port, int32_t &value){
 
-  value = (int32_t)(motEmul[port].position);
+  value = (int32_t)(motEmul[rev(port)].position);
   return 0;
 }
 
@@ -357,3 +372,4 @@ int Emul::reset_all(){
     motEmul[i].speed = 0;
   return 0;
 }
+#endif

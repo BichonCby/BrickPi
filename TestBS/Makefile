@@ -2,7 +2,7 @@ CC=g++
 EXEC = test.out
 SRC=$(wildcard *.cpp)
 OBJ=$(SRC:.cpp=.o)
-LDFLAGS = -lpthread
+LDFLAGS = -lpthread -lwiringPi
 
 all: $(EXEC)
 

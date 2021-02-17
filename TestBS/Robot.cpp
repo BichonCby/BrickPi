@@ -21,6 +21,13 @@ int Robot::initRobot()
 	Conf.getConfig((char *)"SONAR_FRONT_RIGHT",&val);sonFrRight = (uint8_t)val;
 	Conf.getConfig((char *)"SONAR_REAR_LEFT",&val);sonReLeft = (uint8_t)val;
 	Conf.getConfig((char *)"SONAR_REAR_RIGHT",&val);sonReRight = (uint8_t)val;
+
+	Conf.getConfig((char *)"TIRETTE_HW",&val);tiretteHW = (uint8_t)val;
+	Conf.getConfig((char *)"TIRETTE_PORT",&val);tirettePort = (uint8_t)val;
+	Conf.getConfig((char *)"TIRETTE_EV3",&val);tiretteEV3 = (uint8_t)val;
+	Conf.getConfig((char *)"BAU_HW",&val);bauHW = (uint8_t)val;
+	Conf.getConfig((char *)"BAU_HW",&val);bauPort = (uint8_t)val;
+	Conf.getConfig((char *)"BAU_HW",&val);bauEV3 = (uint8_t)val;
 	
 	color = GREEN; // sera à lire sur le contacteur
 	stateMatch = MATCH_PREPARE;

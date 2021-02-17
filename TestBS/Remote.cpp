@@ -182,6 +182,13 @@ int Remote::decodeFrame()
 			}
 			encodeFrame(ID_ACK);
 			break;
+		case ID_OBSTACLE :
+#ifdef EMULATOR
+			printf("obstacle change\n");
+			BP.changeObstacle();
+#endif
+			encodeFrame(ID_ACK);
+			break;
 		default : // on ne connait pas la trame
 			encodeFrame(ID_NACK,ERR_BAD_ID);
 			printf("Trame reçue inconnue\n");
@@ -295,7 +302,7 @@ int Remote::encodeFrame(char id, char err)
 			strWrite[1] = 4;// taille utile
 			strWrite[2] = Rob.getVersion();
 			Sen.getEncoder(&vali20,&vali21);
-			printf("codeurs D : %d  G : %d\n",vali20,vali21);
+			printf("codeurs D : %d  G : %d touch %d\n",vali20,vali21, (int)Sen.getTouch(BUTTON_TIRETTE));
 			strWrite[3] = (char) ((int)vali20 & 0x00FF); // codeur droit poids faible
 			strWrite[4] = (char) (((int)vali20)>>8 & 0x00FF); // codeur droit poids fort
 			strWrite[5] = (char) ((int)vali21 & 0x00FF); // codeur gauche poids faible

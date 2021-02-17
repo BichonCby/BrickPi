@@ -261,6 +261,7 @@ class Emul{
     Emul(uint8_t addr = 1);
 
     int runEmul();
+    int changeObstacle(); // pour l'instant c'est binaire
   // Confirm that the BrickPi3 is connected and up-to-date
     int     detect(bool critical = true);
 

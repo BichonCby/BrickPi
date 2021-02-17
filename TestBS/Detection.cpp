@@ -20,7 +20,7 @@ int Detection::detect() // fonction appelée régulièrement
 		distReL = Sen.getSonar(Rob.sonReLeft);
 	if (Rob.getNbSonar(SIDE_REAR)>1)
 		distReR= Sen.getSonar(Rob.sonReRight);
-//	printf("sonars %d %d %d %d\n",Rob.sonFrLeft,distFrL,Rob.sonReLeft,distReL);
+	//printf("sonars %d %d %d %d\n",Rob.sonFrLeft,distFrL,Rob.sonReLeft,distReL);
 	// il faut vérifier sonar par sonar que l'on ne détecte pas en dehors de la table
 	
 	// ensuite on renvoie le booléen de détection

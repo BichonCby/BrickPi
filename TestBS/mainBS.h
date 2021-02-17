@@ -9,12 +9,14 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <math.h>
+#include <wiringPi.h>
 
 #include "Config.h"
 #include "Utils.h"
 #ifdef EMULATOR
 #include "Emul.h"
 #else
+#define Emul_h_
 #include "BrickPi3.h"
 #endif
 #include "MotorsBS.h"

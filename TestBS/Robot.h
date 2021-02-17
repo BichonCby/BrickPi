@@ -25,8 +25,12 @@
 #define SIDE_LEFT 3
 #define SIDE_RIGHT 4
 
-#define TIRETTE Sen.getTouch(1)
-#define BAU Sen.getTouch(2)
+#define TIRETTE Sen.getTouch(BUTTON_TIRETTE)
+//#define BAU Sen.getTouch(BUTTON_BAU)
+#define BAU false
+
+#define BUTTON_TIRETTE 0
+#define BUTTON_BAU 1
 
 class Robot{
 public:
@@ -54,6 +58,12 @@ uint8_t sonFrRight; // le numéro du sonar avant droit
 uint8_t sonFrLeft; // le numéro du sonar avant gauche
 uint8_t sonReRight;// le numéro du sonar arrière droit
 uint8_t sonReLeft; // le numéro du sonar arrière gauche
+uint8_t tiretteHW;
+uint8_t tirettePort;
+uint8_t tiretteEV3;
+uint8_t bauHW;
+uint8_t bauPort;
+uint8_t bauEV3;
 private:
 int color;
 int stateMatch;

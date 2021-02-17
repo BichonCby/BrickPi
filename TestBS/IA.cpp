@@ -8,7 +8,7 @@ IA::IA()
 int IA::launchIA()
 {
 	DoNothing(5000);
-	DoSquare();
+	//DoSquare();
 	DoNothing(100000);
 	
 	//DoSquare();

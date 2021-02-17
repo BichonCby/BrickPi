@@ -12,7 +12,7 @@
  */
 
 #include "BrickPi3.h"
-#define DEBUG_BS
+//#define DEBUG_BS
 int spi_file_handle = -1;                    // SPI file handle
 struct spi_ioc_transfer spi_xfer_struct;     // SPI transfer struct
 uint8_t spi_array_out[LONGEST_SPI_TRANSFER]; // SPI out array
@@ -469,6 +469,7 @@ int BrickPi3::get_sensor(uint8_t port, void *value_ptr){
       msg_type = BPSPI_MESSAGE_GET_SENSOR_4;
     break;
     default:
+      printf("port %d\n",port);
       fatal_error("get_sensor error. Must be one sensor port at a time. PORT_1, PORT_2, PORT_3, or PORT_4.");
   }
 
