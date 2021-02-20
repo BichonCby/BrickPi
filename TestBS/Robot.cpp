@@ -34,6 +34,7 @@ int Robot::initRobot()
 	typeMatch = TYPE_NORMAL;
 	//score = 0;
 	counterMatch = 0;
+	return 0;
 }
 char Robot::getVersion()
 {
@@ -78,7 +79,8 @@ int Robot::getCounter()
 }
 int Robot::setCounter(int c)
 {
-	counterMatch = c;
+	return(counterMatch = c);
+	//return 0;
 }
 int Robot::incCounter()
 {

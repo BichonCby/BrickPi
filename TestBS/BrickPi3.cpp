@@ -97,6 +97,7 @@ int BrickPi3_set_address(int addr, const char *id){
   if(spi_transfer_array(19, spi_array_out, spi_array_in)){
     return -1;
   }
+  return 0;
 }
 
 
@@ -174,7 +175,8 @@ int BrickPi3::detect(bool critical){
   char str[21];
   int error;
   // assign error to the value returned by get_manufacturer, and if not 0:
-  if(error = get_manufacturer(str)){
+  error = get_manufacturer(str);
+  if(error){
     if(critical){
       fatal_error("detect error: get_manufacturer failed. Perhaps the BrickPi3 is not connected, or the address is incorrect.");
     }else{
@@ -190,7 +192,8 @@ int BrickPi3::detect(bool critical){
   }
 
   // assign error to the value returned by get_board, and if not 0:
-  if(error = get_board(str)){
+  error = get_board(str);
+  if(error){
     if(critical){
       fatal_error("detect error: get_board failed");
     }else{
@@ -206,7 +209,8 @@ int BrickPi3::detect(bool critical){
   }
 
   // assign error to the value returned by get_version_firmware, and if not 0:
-  if(error = get_version_firmware(str)){
+  error = get_version_firmware(str);
+  if(error){
     if(critical){
       fatal_error("detect error: get_version_firmware failed");
     }else{
@@ -239,6 +243,7 @@ int BrickPi3::get_version_hardware(char *str){
     return error;
   }
   sprintf(str, "%d.%d.%d", (value / 1000000), ((value / 1000) % 1000), (value % 1000));
+  return 0;
 }
 
 int BrickPi3::get_version_firmware(char *str){

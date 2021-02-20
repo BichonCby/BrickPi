@@ -250,11 +250,13 @@ int Asserv::manualSpeed(int spdRight, int spdLeft)
 	typeAss = ASS_MANUAL;
 	speedLeftMan = spdLeft;
 	speedRightMan = spdRight;
+	return 0;
 }
 int Asserv::manualPower(int powerRight, int powerLeft)
 {
 	Mot.setMotorPower(Rob.whlLeft,powerLeft);
 	Mot.setMotorPower(Rob.whlRight,powerRight);
+	return 0;
 }
 
 int Asserv::stopRobot()
@@ -262,11 +264,12 @@ int Asserv::stopRobot()
 	typeAss = ASS_NUL;
 	speedLeftMan =0; // utile?
 	speedRightMan = 0; // utile?
+	return 0;
 }
 int Asserv::checkBlocked() // détection de blocage, appel régulier
 {
 	float sf,sr;
-	//Pos.getSpeed(&sf,&sr);
+	Pos.getSpeed(&sf,&sr);
 	// il faudra y mettre des calibrations de config
 	if (	(speedForReq > 30 && sf <20)
 		||	(speedForReq < -30 && sr >-20))

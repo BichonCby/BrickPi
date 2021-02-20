@@ -50,7 +50,7 @@ void *stopstart( void*)
     printf("Fin du match\n");
     Rob.setStateMatch(MATCH_DISPLAY); // en fait ça sera funny ou display
     Ass.stopRobot();
-   // return;
+    return NULL;
 }
 sensor_ultrasonic_t sonar;
 
@@ -60,11 +60,11 @@ void * strategy (void *)
     // les tests actionneurs
     // on lance l'IA
     MyIA.launchIA();
-    //return;
+    return NULL;
 }
 void * seq20ms(void *)
 {
-    char *ret;
+    //char *ret;
     if (seqRun)
     {
         // watchdog, c'est la merde
@@ -85,12 +85,13 @@ void * seq20ms(void *)
     Act.calcAction();
     
     seqRun = false; 
-    //return ret;
+    return NULL;
 }
 
 void *remotecontrol(void *)
 {
     Rem.threadRemote();
+    return NULL;
 }
 int main(int argc, char **argv)
 {

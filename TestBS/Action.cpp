@@ -8,6 +8,7 @@ Action::Action()
 int Action::initAction()
 {
 	stArms = ARMS_OFF;
+	return 0;
 }
 
 int Action::calcAction()

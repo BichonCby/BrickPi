@@ -9,7 +9,7 @@ Remote::Remote()
 void Remote::threadRemote()
 {
 	
-	int fd,i;
+	int fd;
 	char input;
 	const char * fifowrite = "/tmp/RobBSmap"; // du robot vers l'outil
 	const char * fiforead = "/tmp/BSmapRob"; // de l'outil vers le robot
@@ -75,7 +75,8 @@ void Remote::threadRemote()
 // fonction de décodage de la trame reçue. Pour l'instant on écrit
 int Remote::decodeFrame()
 {
-	float ftmp1,ftmp2;
+	float ftmp1;
+	//float ftmp2;
 	int itmp1, itmp2;
 	char ctmp1,ctmp2,ctmp3;
 	char name[50];
@@ -204,7 +205,8 @@ int Remote::encodeFrame(char id, char err)
 	// si c'est un ordre, on va répondre OK avec le numéro de l'ordre
 	// si c'est un requete de trame, on renvoie la trame
 	float valf1, valf2, valf3;
-	int vali1, vali2,i;
+	int vali1;
+	uint16_t i;
 	int16_t vali10,vali11;
 	int32_t vali20,vali21;
 	int8_t valc1,valc2;

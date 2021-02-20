@@ -9,9 +9,9 @@ Config::Config()
 int Config::readConfig()
 {
     char ligne[100];
-    char calib[100];
+    //char calib[100];
     char categ[50]="* no categ";
-    float val;
+    //float val;
     int idx=0;
     FILE * pfile;
     pfile = fopen("config.ini","r");

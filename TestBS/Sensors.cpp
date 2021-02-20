@@ -22,16 +22,18 @@ Sensors::Sensors()
 		BP.set_sensor_type((1 << (Rob.encoderRight-1)),SENSOR_TYPE_I2C);
 	}
 	// ajouter la config des contacteurs
-	if (Rob.tiretteHW == HW_BUTTON_BP) // si la tirette est un port BP
+	if (Rob.tiretteHW == HW_BUTTON_BP){ // si la tirette est un port BP
 		if (Rob.tiretteEV3)
 			BP.set_sensor_type(1 << (Rob.tirettePort-1),SENSOR_TYPE_TOUCH_EV3);
 		else
 			BP.set_sensor_type(1 << (Rob.tirettePort-1),SENSOR_TYPE_TOUCH);
-	if (Rob.bauHW == HW_BUTTON_BP) // si la tirette est un port BP
+	}
+	if (Rob.bauHW == HW_BUTTON_BP){ // si la tirette est un port BP
 		if (Rob.bauEV3)
 			BP.set_sensor_type(1 << (Rob.bauPort-1),SENSOR_TYPE_TOUCH_EV3);
 		else
 			BP.set_sensor_type(1 << (Rob.bauPort-1),SENSOR_TYPE_TOUCH);
+	}
 	setTouchType(BUTTON_TIRETTE,Rob.tiretteHW,Rob.tirettePort);
 	printf("tirette %d type %d port %d\n",BUTTON_TIRETTE,Rob.tiretteHW,Rob.tirettePort);
 	setTouchType(BUTTON_BAU,Rob.bauHW,Rob.bauPort);
@@ -80,7 +82,7 @@ int Sensors::getSonar(uint8_t num) // valeur du sonar
 }
 int Sensors::readEncoder(void)
 {
-	int32_t val;
+	//int32_t val=0;
 	if (Rob.isExternalEncoder())
 	{
 		BP.get_sensor(1<< (Rob.encoderRight-1),&coderRight);

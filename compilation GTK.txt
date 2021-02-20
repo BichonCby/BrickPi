@@ -1,0 +1,3 @@
+g++ -c testGTK.cpp `pkg-config --cflags gtk+-3.0` -DGDK_VERSION_MIN_REQUIRED=GDK_VERSION_3_0
+
+g++ -o testGTK testGTK.cpp `pkg-config --cflags gtk+-3.0` -DGDK_VERSION_MIN_REQUIRED=GDK_VERSION_3_0 `pkg-config --libs gtk+-3.0`
