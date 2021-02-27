@@ -2,7 +2,6 @@
 //#include <fcntl.h>
 #include <sys/stat.h>
 //#include <sys/types.h>
-
 Remote::Remote()
 {}
 
@@ -106,23 +105,23 @@ int Remote::decodeFrame()
 			break;
 		case ID_ORDERMOVE : // on donne un ordre de déplacement 
 			// on va traiter l'ordre, une fois qu'on saura comment faire
-			//printf("ordre reçu\n");
+			printf("ordre reçu\n");
 			Rob.setTypeMatch(TYPE_REMOTE); // si on donne un ordre, on prend la main
 			switch (strRead[3]) // le type de déplacement
 			{
 				case 'P':
 					itmp1 = (int16_t)((int)strRead[4] + ((int)(strRead[5]))*256);
 					itmp2 = (int16_t)((int)strRead[6] + ((int)(strRead[7]))*256);
-					Ass.goForward(itmp1,itmp2,30); // voir comment on récupère la vitesse
+					Ass.goForward(itmp1,itmp2,100); // voir comment on récupère la vitesse
 					break;
 				case 'I':
 					itmp1 = (int16_t)((int)strRead[4] + ((int)(strRead[5]))*256);
 					itmp2 = (int16_t)((int)strRead[6] + ((int)(strRead[7]))*256);
-					Ass.goBackward(itmp1,itmp2,30); // voir comment on récupère la vitesse
+					Ass.goBackward(itmp1,itmp2,100); // voir comment on récupère la vitesse
 					break;
 				case 'R':
 					itmp1 = (int16_t)((int)strRead[4] + ((int)(strRead[5]))*256);
-					Ass.turn(itmp1,30); // voir comment on récupère la vitesse
+					Ass.turn(itmp1,100); // voir comment on récupère la vitesse
 					break;
 				case 'M':
 					itmp1 = (int16_t)((int)strRead[4] + ((int)(strRead[5]))*256);
@@ -301,7 +300,7 @@ int Remote::encodeFrame(char id, char err)
 			break;
 		case ID_SENSORS :
 			strWrite[0] = ID_SENSORS;
-			strWrite[1] = 4;// taille utile
+			strWrite[1] = 8;// taille utile
 			strWrite[2] = Rob.getVersion();
 			Sen.getEncoder(&vali20,&vali21);
 			printf("codeurs D : %d  G : %d touch %d\n",vali20,vali21, (int)Sen.getTouch(BUTTON_TIRETTE));
@@ -309,6 +308,11 @@ int Remote::encodeFrame(char id, char err)
 			strWrite[4] = (char) (((int)vali20)>>8 & 0x00FF); // codeur droit poids fort
 			strWrite[5] = (char) ((int)vali21 & 0x00FF); // codeur gauche poids faible
 			strWrite[6] = (char) (((int)vali21)>>8 & 0x00FF); // codeur gauche poids fort
+			strWrite[7] = (unsigned char)(Sen.getSonar(Rob.sonFrLeft));
+			strWrite[8] = (unsigned char)(Sen.getSonar(Rob.sonFrRight));
+			strWrite[9] = (unsigned char)(Sen.getSonar(Rob.sonReLeft));
+			strWrite[10] = (unsigned char)(Sen.getSonar(Rob.sonReRight));
+			printf("sonars %d %d %d %d\n",Sen.getSonar(Rob.sonFrLeft),Rob.sonFrRight,Rob.sonReLeft,Sen.getSonar(Rob.sonReLeft));
 			sizeWrite = strWrite[1]+4;
 			break;
 			

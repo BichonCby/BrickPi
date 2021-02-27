@@ -56,6 +56,8 @@ sensor_ultrasonic_t sonar;
 
 void * strategy (void *)
 {
+    sleeps(1);
+    Pos.setPosition((float)Rob.initPosX,(float)Rob.initPosY,(float)Rob.initPosA);
     //  d'abord le positionnement si besoin, l'attente de la couleur,
     // les tests actionneurs
     // on lance l'IA

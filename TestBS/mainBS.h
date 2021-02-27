@@ -1,8 +1,8 @@
 #ifndef __MainBS_h__
 #define __MainBS_h__
 
-#define EMULATOR 
-
+//#define EMULATOR 
+#undef EMULATOR
 
 #include <iostream>
 #include <pthread.h>

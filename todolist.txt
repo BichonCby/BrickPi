@@ -13,6 +13,11 @@ Passer les unités de rotation en 0.1°/s pour les transferts pipe??
 //intégrer des trames de détections pour l'émulateur
 //dans l'émulateur, gérer les sonars branchés directement
 //gérer les codeurs des moteurs, non indépendants
+interface graphique avec dessin du terrain
+bouton pour lancer le match, ou le relancer
+faire bouton pour écrire la calib
+//Rajouter la position d'init dans la config
+
 A tester
 
 //pilotage manuel des roues

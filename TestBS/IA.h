@@ -10,7 +10,7 @@ int launchIA();
 private:
 void DoSquare();
 void DoNothing(int t);
-
+void StopSec(float ts);
 };
 
 #endif

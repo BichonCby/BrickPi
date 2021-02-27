@@ -1,6 +1,7 @@
 
 //#include "Emul.h"
 #include "mainBS.h"
+#undef EMULATOR
 #ifdef EMULATOR
 // pour donner le num (0 3) en fonction du port(0x01 0x08)
 #define   rev(port) (port==1)?0:((port==2)?1:((port==4)?2:3))
@@ -10,7 +11,7 @@ Emul::Emul(uint8_t addr){
   Address = addr;
   for (int i=0;i<4;i++)
   {
-    motEmul[i].position = 0;
+    motEmul[i].posit ion = 0;
     motEmul[i].power = 0;
     motEmul[i].speed = 0;
     motEmul[i].state = 0; //ah bon?

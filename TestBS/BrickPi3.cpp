@@ -743,6 +743,7 @@ int BrickPi3::set_motor_position_relative(uint8_t port, int32_t position){
 }
 
 int BrickPi3::set_motor_dps(uint8_t port, int16_t dps){
+ // printf("port %d dps %d\n",port,dps);
   spi_array_out[0] = Address;
   spi_array_out[1] = BPSPI_MESSAGE_SET_MOTOR_DPS;
   spi_array_out[2] = port;

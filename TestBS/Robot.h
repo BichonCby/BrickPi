@@ -64,6 +64,10 @@ uint8_t tiretteEV3;
 uint8_t bauHW;
 uint8_t bauPort;
 uint8_t bauEV3;
+int initPosX;
+int initPosY;
+int initPosA;
+
 private:
 int color;
 int stateMatch;

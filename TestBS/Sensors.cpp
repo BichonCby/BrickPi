@@ -90,9 +90,9 @@ int Sensors::readEncoder(void)
 	}
 	else // codeurs moteur
 	{
-		BP.get_motor_encoder(Rob.whlRight,coderRight.angle);
+		BP.get_motor_encoder(1<< (Rob.whlRight-1),coderRight.angle);
 		//coderRight.angle=val;
-		BP.get_motor_encoder(Rob.whlLeft,coderLeft.angle);
+		BP.get_motor_encoder(1<< (Rob.whlLeft-1),coderLeft.angle);
 		//coderLeft.angle=val;
 	}
 	return 0;

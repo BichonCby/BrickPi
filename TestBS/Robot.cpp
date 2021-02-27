@@ -28,6 +28,10 @@ int Robot::initRobot()
 	Conf.getConfig((char *)"BAU_HW",&val);bauHW = (uint8_t)val;
 	Conf.getConfig((char *)"BAU_HW",&val);bauPort = (uint8_t)val;
 	Conf.getConfig((char *)"BAU_HW",&val);bauEV3 = (uint8_t)val;
+
+	Conf.getConfig((char *)"INIT_POS_X",&val);initPosX = (int)val;
+	Conf.getConfig((char *)"INIT_POS_Y",&val);initPosY = (int)val;
+	Conf.getConfig((char *)"INIT_POS_A",&val);initPosA = (int)val;
 	
 	color = GREEN; // sera à lire sur le contacteur
 	stateMatch = MATCH_PREPARE;
