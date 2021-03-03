@@ -3,7 +3,7 @@
 Config::Config()
 {
 	readConfig();
-	writeConfig(); // pour le test
+	//writeConfig(); // pour le test
 }
 
 int Config::readConfig()
@@ -71,7 +71,12 @@ int Config::getConfig(char *nom,float *v)
 int Config::writeConfig()
 {
     FILE * pfile;
-    pfile = fopen("configout.ini","w");
+    time_t timestamp = time(NULL);
+    struct tm * ti = localtime(&timestamp);
+    char mycom[50];
+    sprintf(mycom,"cp config.ini config%d%d%d%d%d%d.ini",ti->tm_year-100,ti->tm_mon+1,ti->tm_mday,ti->tm_hour,ti->tm_min,ti->tm_sec);
+    system(mycom);
+    pfile = fopen("config.ini","w");
     char cat[50]=" nul";
     if (pfile == NULL) {fputs("File error",stdout); return -1;}
 	fprintf(pfile,"%s\n",heading);

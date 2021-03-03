@@ -64,7 +64,7 @@ void Asserv::generateVirtualSpeed(void)
 				absAngle = modulo180(RAD2DEG*asinf(deltay/distance));
 				if (targetX < curX)
 					absAngle = 180-absAngle;
-				deltaAngle = modulo180(absAngle-curA);
+				deltaAngle = modulo180(absAngle-curA+180);
 			}
 			else // on est trop près
 			{
@@ -72,7 +72,6 @@ void Asserv::generateVirtualSpeed(void)
 				deltaAngle = 180;
 			}
 			distance = -distance; // marche arrière
-			deltaAngle = deltaAngle + 180; // a voir pourquoi !!!
 			
 			// changement de repère A SIMPLIFIER
 			if (abs(deltaAngle) > 90 && abs(distance) < 200)
