@@ -4,4 +4,5 @@
 #define sleepms(t) usleep(t*1000)
 #define sleeps(t) usleep(t*1000000);
 extern float modulo180(float angle);
+extern float carto(float x, float *axe, float *val);
 

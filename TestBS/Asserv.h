@@ -38,6 +38,9 @@ float KP_FOR = 1;
 float KP_ROT = 1;
 float DPSROB_TO_DPSWHL = 1;
 float MMSROB_TO_DPSWHL = 1;
+// cartographie pour asserv polaire
+float facSpdForAxe[2]= {15,30}; // les angles points d'appui
+float facSpdForVal[2]= {1,0}; // le coefficient de prise en compte de l'avance par rapport à la rotation
 // fonctions internes à la classe
 void generateVirtualSpeed(void);
 void driveWheels(void);

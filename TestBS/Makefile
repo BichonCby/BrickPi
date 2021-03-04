@@ -1,8 +1,8 @@
 CC=g++
-EXEC = test.out
+EXEC = test
 SRC=$(wildcard *.cpp)
 OBJ=$(SRC:.cpp=.o)
-LDFLAGS = -lpthread -lwiringPi
+LDFLAGS = -lpthread -lm -lwiringPi
 
 all: $(EXEC)
 

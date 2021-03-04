@@ -91,13 +91,13 @@ void Asserv::generateVirtualSpeed(void)
 	}
 	// calcul des vitesses de consigne
 	// en attendant la carto, on fait à l'ancienne
-	if (abs(deltaAngle)>30.0)
-		speedForReq = 0;
-	else if (abs(deltaAngle) > 15.0)
-		speedForReq = KP_FOR*distance*(2-2*deltaAngle/300);
-	else
-		speedForReq = KP_FOR*distance;
-		
+	//if (abs(deltaAngle)>30.0)
+		//speedForReq = 0;
+	//else if (abs(deltaAngle) > 15.0)
+		//speedForReq = KP_FOR*distance*(2-2*deltaAngle/300);
+	//else
+		//speedForReq = KP_FOR*distance;
+	speedForReq = carto(abs(deltaAngle),facSpdForAxe,facSpdForVal)*KP_FOR*distance;
 	// gestion de l'arrive vite (A faire)
 	
 	// rotation
@@ -310,4 +310,24 @@ int Asserv::getSpeed(float *spdFor, float *spdRot)
 	*spdRot=speedRotReq;
 	//printf("spdRot = %d\n",(int)(speedRotReq));
 	return 0;
+}
+
+float carto(float x, float *axe, float *val)
+{
+	int n = sizeof(axe);
+	int m=1;
+	if (x<=axe[0])
+		return val[0];
+	if (x>=axe[n-1])
+		return val[n-1];
+	while (m<=n)
+	{
+		if (x>axe[m])
+			m++;
+		else
+		{
+			return (val[m-1]+(x-axe[m-1])*(val[m]-val[m-1])/(axe[m]-axe[m-1]));
+		}
+	}
+	return 0;//impossible
 }
