@@ -25,7 +25,7 @@ int Detection::detect() // fonction appelée régulièrement
 	
 	// ensuite on renvoie le booléen de détection
 	obstacle = false;
-	if (Ass.getSpeedForReq() > 0 
+	if (Ass.getSpeedForReq() > -500 // pour le test
 		&& (distFrR < DIST_OBSTACLE_FRONT || distFrL < DIST_OBSTACLE_FRONT))
 		obstacle = true;
 	if (Ass.getSpeedForReq() < 0 

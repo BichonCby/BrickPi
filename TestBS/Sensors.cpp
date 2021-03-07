@@ -35,8 +35,9 @@ Sensors::Sensors()
 			BP.set_sensor_type(1 << (Rob.bauPort-1),SENSOR_TYPE_TOUCH);
 	}
 	setTouchType(BUTTON_TIRETTE,Rob.tiretteHW,Rob.tirettePort);
-	printf("tirette %d type %d port %d\n",BUTTON_TIRETTE,Rob.tiretteHW,Rob.tirettePort);
+//	printf("tirette %d type %d port %d\n",BUTTON_TIRETTE,Rob.tiretteHW,Rob.tirettePort);
 	setTouchType(BUTTON_BAU,Rob.bauHW,Rob.bauPort);
+//	printf("BAU %d type %d port %d\n",BUTTON_BAU,Rob.bauHW,Rob.bauPort);
 }
 
 int Sensors::setTouchType(uint8_t id, uint8_t typ, uint8_t por)
@@ -51,7 +52,7 @@ bool Sensors::getTouch(int id)
 	sensor_touch_t btn;
 	if (button[id].type == HW_BUTTON_BP)
 	{
-		//printf("bouton %d\n",id);
+	//	printf("bouton %d\n",id);
 		BP.get_sensor((1 << (button[id].port-1)),&btn);
 		return btn.pressed;
 	}
@@ -69,20 +70,11 @@ bool Sensors::getTouch(int id)
 }
 int Sensors::getSonar(uint8_t num) // valeur du sonar
 {
-	//printf("sonar\n");
 	BP.get_sensor((1<< (num-1)),&sonar1);
 	return (sonar1.cm);
-	//myi2c.address = 0x02;
-	//myi2c.length_write = 1;
-	//myi2c.length_read = 1;
-	//printf("result = %d\n",BP.transact_i2c(num, &myi2c));
-	
-	return 0;//(int) (myi2c.buffer_read[0]);//+myi2c.buffer_read[1]+myi2c.buffer_read[2]);
-	//return sonar1.cm;
 }
 int Sensors::readEncoder(void)
 {
-	//int32_t val=0;
 	if (Rob.isExternalEncoder())
 	{
 		BP.get_sensor(1<< (Rob.encoderRight-1),&coderRight);
@@ -91,9 +83,7 @@ int Sensors::readEncoder(void)
 	else // codeurs moteur
 	{
 		BP.get_motor_encoder(1<< (Rob.whlRight-1),coderRight.angle);
-		//coderRight.angle=val;
 		BP.get_motor_encoder(1<< (Rob.whlLeft-1),coderLeft.angle);
-		//coderLeft.angle=val;
 	}
 	return 0;
 }

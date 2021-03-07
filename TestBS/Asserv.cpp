@@ -186,17 +186,29 @@ bool Asserv::isConverge(void)
 {
 	return converge;
 }
+// Conditions de sortie de la micro étape :
+// - Convergence (tout va bien)
+// - Détection d'obstacle (on renvoie -1)
+// - blocage (si activé) (on renvoie -2)
+// - type-remote (on veut se  laisser le loisir de changer de cible) tout va bien
+// - fin de match (et pas remote) 
 
 int Asserv::goForward(int x, int y, int speed)
 {
 	// mettre un sémaphore
+	if (Rob.getTypeMatch() != TYPE_REMOTE && Rob.getStateMatch() >= MATCH_FUNNY)
+		return 1;
+	while (!Rob.getSeqRun()); // on atend le pas de calcul suivant
+	while (Rob.getSeqRun()); // on atend la fin de la séquence
 	targetX = x;
 	targetY = y;
 	typeAss = ASS_POLAR;
 	speedForMax = speed;
 	speedRotMax = 90; // il faudra mettre une calibration
 	sleepms(20); // pour être sûr que c'est pris en compte
-	while (!isConverge() && !Det.isObstacle() && Rob.getTypeMatch() != TYPE_REMOTE)
+	while (!isConverge() && !Det.isObstacle() 
+			&& Rob.getTypeMatch() != TYPE_REMOTE
+			&& Rob.getStateMatch() < MATCH_FUNNY) // on arrete de bouger à la funny
 		sleepms(20);
 	if (Det.isObstacle())
 		return -1; // détection
@@ -205,13 +217,19 @@ int Asserv::goForward(int x, int y, int speed)
 int Asserv::goBackward(int x, int y, int speed)
 {
 	// mettre un sémaphore
+	if (Rob.getTypeMatch() != TYPE_REMOTE && Rob.getStateMatch() >= MATCH_FUNNY)
+		return 1;
+	while (!Rob.getSeqRun()); // on atend le pas de calcul suivant
+	while (Rob.getSeqRun()); // on atend la fin de la séquence
 	targetX = x;
 	targetY = y;
 	typeAss = ASS_POLARREV;
 	speedForMax = speed;
 	speedRotMax = 90; // il faudra mettre une calibration
 	sleepms(20); // pour être sûr que c'est pris en compte
-	while (!isConverge() && !Det.isObstacle() && Rob.getTypeMatch() != TYPE_REMOTE)
+	while (!isConverge() && !Det.isObstacle() 
+			&& Rob.getTypeMatch() != TYPE_REMOTE
+			&& Rob.getStateMatch() < MATCH_FUNNY) // on arrete de bouger à la funny
 		sleepms(20);
 	if (Det.isObstacle())
 		return -1; // détection
@@ -220,6 +238,10 @@ int Asserv::goBackward(int x, int y, int speed)
 int Asserv::turn(int a, int speed)
 {
 	// mettre un sémaphore
+	if (Rob.getTypeMatch() != TYPE_REMOTE && Rob.getStateMatch() >= MATCH_FUNNY)
+		return 1;
+	while (!Rob.getSeqRun()); // on atend le pas de calcul suivant
+	while (Rob.getSeqRun()); // on atend la fin de la séquence
 	printf("rotation\n");
 	targetA = (float)a;
 	typeAss = ASS_ROTATION;
@@ -227,7 +249,9 @@ int Asserv::turn(int a, int speed)
 	speedForMax = 30; // il faudra mettre une calibration
 	sleepms(20); // pour être sûr que c'est pris en compte
 	//printf("tarA =%d vmax = %f\n",(int)targetA,speedRotMax);
-	while (!isConverge() && !Det.isObstacle() && Rob.getTypeMatch() != TYPE_REMOTE)
+	while (!isConverge() && !Det.isObstacle() 
+			&& Rob.getTypeMatch() != TYPE_REMOTE
+			&& Rob.getStateMatch() < MATCH_FUNNY) // on arrete de bouger à la funny
 		sleepms(20);
 	if (Det.isObstacle())
 		return -1; // détection
@@ -235,10 +259,16 @@ int Asserv::turn(int a, int speed)
 }
 int Asserv::pivot(uint8_t blkWhl,uint8_t dir, int angle)
 {
+	if (Rob.getTypeMatch() != TYPE_REMOTE && Rob.getStateMatch() >= MATCH_FUNNY)
+		return 1;
+	while (!Rob.getSeqRun()); // on atend le pas de calcul suivant
+	while (Rob.getSeqRun()); // on atend la fin de la séquence
 	blockedWhl = blkWhl;
 	typeAss = ASS_PIVOT;
 	sleepms(20);
-	while (!isConverge() && !Det.isObstacle() && Rob.getTypeMatch() != TYPE_REMOTE)
+	while (!isConverge() && !Det.isObstacle() 
+			&& Rob.getTypeMatch() != TYPE_REMOTE
+			&& Rob.getStateMatch() < MATCH_FUNNY) // on arrete de bouger à la funny
 		sleepms(20);
 	if (Det.isObstacle())
 		return -1; // détection
@@ -246,6 +276,11 @@ int Asserv::pivot(uint8_t blkWhl,uint8_t dir, int angle)
 }
 int Asserv::manualSpeed(int spdRight, int spdLeft)
 {
+	if (Rob.getTypeMatch() != TYPE_REMOTE && Rob.getStateMatch() >= MATCH_FUNNY)
+		return 1;
+		
+	while (!Rob.getSeqRun()); // on atend le pas de calcul suivant
+	while (Rob.getSeqRun()); // on atend la fin de la séquence
 	typeAss = ASS_MANUAL;
 	speedLeftMan = spdLeft;
 	speedRightMan = spdRight;
@@ -253,6 +288,10 @@ int Asserv::manualSpeed(int spdRight, int spdLeft)
 }
 int Asserv::manualPower(int powerRight, int powerLeft)
 {
+	if (Rob.getTypeMatch() != TYPE_REMOTE && Rob.getStateMatch() >= MATCH_FUNNY)
+		return 1;
+	while (!Rob.getSeqRun()); // on atend le pas de calcul suivant
+	while (Rob.getSeqRun()); // on atend la fin de la séquence
 	Mot.setMotorPower(Rob.whlLeft,powerLeft);
 	Mot.setMotorPower(Rob.whlRight,powerRight);
 	return 0;

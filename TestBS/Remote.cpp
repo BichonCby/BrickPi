@@ -264,6 +264,7 @@ int Remote::encodeFrame(char id, char err)
 			strWrite[1] = 13;// taille utile
 			strWrite[2] = Rob.getVersion();
 			Ass.getTarget(&valf1,&valf2,&valf3,&vali1);
+			printf("asser %d x = %d y = %d a = %d ",(int)vali1,(int)valf1,(int)valf2,(int)valf3);
 			strWrite[3] = (char) (vali1); // type de déplacement
 			strWrite[4] = (char) ((int)valf1 & 0x00FF); // tar X poids faible
 			strWrite[5] = (char) (((int)valf1)>>8 & 0x00FF); // tar X poids fort
@@ -272,13 +273,13 @@ int Remote::encodeFrame(char id, char err)
 			strWrite[8] = (char) ((int)valf3 & 0x00FF); // tar A poids faible
 			strWrite[9] = (char) (((int)valf3)>>8 & 0x00FF); // tar A poids fort
 			Ass.getSpeed(&valf1,&valf2);
-			printf("asser Vlongi = %d Vrot = %d\n",(int)valf1,(int)valf2);
+			//printf("asser Vlongi = %d Vrot = %d\n",(int)valf1,(int)valf2);
 			strWrite[10] = (char) ((int)valf1 & 0x00FF); // vit longi  poids faible;
 			strWrite[11] = (char) (((int)valf1)>>8 & 0x00FF); // vit longi PF
 			strWrite[12] = (char) ((int)valf2 & 0x00FF); // vit rot pf
 			strWrite[13] = (char) (((int)valf2)>>8 & 0x00FF); // vit rot PF
 			strWrite[14] = (char) (Ass.isConverge()); // convergence
-		//	printf("conv %d %d\n",Ass.isConverge(),strWrite[14]);
+			printf("conv %d detect %d\n",(int)Ass.isConverge(),(int)Det.isObstacle());
 			strWrite[15] = (char) (Ass.isBlocked()); // blocage
 			strWrite[16] = checkSum();
 			sizeWrite = strWrite[1]+4;

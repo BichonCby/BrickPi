@@ -26,8 +26,8 @@ int Robot::initRobot()
 	Conf.getConfig((char *)"TIRETTE_PORT",&val);tirettePort = (uint8_t)val;
 	Conf.getConfig((char *)"TIRETTE_EV3",&val);tiretteEV3 = (uint8_t)val;
 	Conf.getConfig((char *)"BAU_HW",&val);bauHW = (uint8_t)val;
-	Conf.getConfig((char *)"BAU_HW",&val);bauPort = (uint8_t)val;
-	Conf.getConfig((char *)"BAU_HW",&val);bauEV3 = (uint8_t)val;
+	Conf.getConfig((char *)"BAU_PORT",&val);bauPort = (uint8_t)val;
+	Conf.getConfig((char *)"BAU_EV3",&val);bauEV3 = (uint8_t)val;
 
 	Conf.getConfig((char *)"INIT_POS_X",&val);initPosX = (int)val;
 	Conf.getConfig((char *)"INIT_POS_Y",&val);initPosY = (int)val;
@@ -111,3 +111,7 @@ uint8_t Robot::getNbSonar(int side)
 		return nbReSonar;
 	return 0;
 }
+
+bool Robot::getSeqRun() { return seqRun;}
+int Robot::setSeqRun() { seqRun = true;return 0;}
+int Robot::resetSeqRun()  { seqRun = false;return 0;}

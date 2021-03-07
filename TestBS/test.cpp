@@ -25,7 +25,7 @@ Detection Det;
 int puiss = 30;
 int rot = 360;
 int led=0;
-bool seqRun = false;
+//bool seqRun = false;
 using namespace std;
 
 /***** threads  ******/
@@ -34,12 +34,14 @@ void *stopstart( void*)
     // on vérifie que les contacteurs sont OK
     // si BAU enclenché ou tirette non mise, on gueule
     Rob.setCounter(0);
+    Rob.setStateMatch(MATCH_PREPARE);
     //~ // on attend la tirette
     printf("tirette\n");
     while (TIRETTE)
     {
         sleepms(100); // boucle 100ms
     }
+    Rob.setStateMatch(MATCH_IN_PROGRESS);
     // on lance la tempo 
     printf("BAU\n");
     while (Rob.getCounter() < DURATION_MATCH && !BAU)
@@ -61,19 +63,20 @@ void * strategy (void *)
     //  d'abord le positionnement si besoin, l'attente de la couleur,
     // les tests actionneurs
     // on lance l'IA
+    while(Rob.getStateMatch()!=MATCH_IN_PROGRESS); // on attend le go de la tirette
     MyIA.launchIA();
     return NULL;
 }
 void * seq20ms(void *)
 {
     //char *ret;
-    if (seqRun)
+    if (Rob.getSeqRun())
     {
         // watchdog, c'est la merde
         std::cout << "CATASTROPHE";
         exit(-1);
     }
-    seqRun = true;
+    Rob.setSeqRun();
 #ifdef EMULATOR
     BP.runEmul();
 #endif
@@ -86,7 +89,7 @@ void * seq20ms(void *)
     Ass.calcAsserv();
     Act.calcAction();
     
-    seqRun = false; 
+    Rob.resetSeqRun();
     return NULL;
 }
 
@@ -97,28 +100,26 @@ void *remotecontrol(void *)
 }
 int main(int argc, char **argv)
 {
-  std::cout << "Debut du programme\n";  
-//  return 0;
-    sleepms(20); //20ms c'est le temps de la séquence
-  BP.detect(); // Make sure that the BrickPi3 is communicating and that the firmware is compatible with the drivers.
+    std::cout << "Debut du programme\n";  
+    //  return 0;
+    sleepms(20); //
+    BP.detect(); // Make sure that the BrickPi3 is communicating and that the firmware is compatible with the drivers.
     wiringPiSetup();
 
-  pthread_create(&stt,NULL,&stopstart,NULL);
-  pthread_create(&stra,NULL,&strategy,NULL);
-  pthread_create(&remt,NULL,&remotecontrol,NULL);
-  //BP.set_sensor_type(PORT_1, SENSOR_TYPE_NXT_ULTRASONIC);
+    pthread_create(&stt,NULL,&stopstart,NULL);
+    pthread_create(&stra,NULL,&strategy,NULL);
+    pthread_create(&remt,NULL,&remotecontrol,NULL);
+    //BP.set_sensor_type(PORT_1, SENSOR_TYPE_NXT_ULTRASONIC);
 
-  while (Rob.getStateMatch() != MATCH_END)
-  {
-    
-    //std::thread t1(seq20ms);
-    if (int ret = pthread_create(&seq,NULL,&seq20ms,NULL))
+    while (Rob.getStateMatch() != MATCH_END)
+    {
+        if (int ret = pthread_create(&seq,NULL,&seq20ms,NULL))
         {printf("%d ",ret);fflush(stdout);}
-    pthread_detach(seq); // pour libérer la pile
-    sleepms(20); //20ms c'est le temps de la séquence
-   
-  }
-  BP.reset_all(); 
-  std::cout << "\nFin du programme";
-return 0;
+        pthread_detach(seq); // pour libérer la pile
+        sleepms(20); //20ms c'est le temps de la séquence
+
+    }
+    BP.reset_all(); 
+    std::cout << "\nFin du programme";
+    return 0;
 } 
