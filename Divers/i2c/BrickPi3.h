@@ -1,18 +1,17 @@
+/*
+ *  https://www.dexterindustries.com/BrickPi/
+ *  https://github.com/DexterInd/BrickPi3
+ *
+ *  Copyright (c) 2017 Dexter Industries
+ *  Released under the MIT license (http://choosealicense.com/licenses/mit/).
+ *  For more information see https://github.com/DexterInd/BrickPi3/blob/master/LICENSE.md
+ *
+ *  C++ drivers for the BrickPi3
+ *  Modification CBY : les variables et fonctions ont été déplacées vers le .cpp
+ */
 
-#ifndef Emul_h_
-#define Emul_h_
-
-#include <stdint.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <linux/spi/spidev.h>
-#include <stdio.h>            // for printf
-#include <string.h>           // for strstr
-
-//#include <linux/types.h>
-//#include <getopt.h>
-//#include <unistd.h>
+#ifndef BrickPi3_h_
+#define BrickPi3_h_
 
 #define FIRMWARE_VERSION_REQUIRED "1.4." // Firmware version needs to start with this
 
@@ -188,7 +187,6 @@ enum SENSOR_CONFIG_FLAGS{
 #define REMOTE_BIT_BROADCAST 0x10
 
 // structure for I2C
-
 struct i2c_struct_t{
   uint8_t speed;
   uint32_t delay; // modif CBY
@@ -248,22 +246,12 @@ struct sensor_infrared_t{
   uint8_t  remote[4];
 };
 
-struct motEmul_t {
-	int16_t speed;
-	int8_t power;
-  float position;
-  uint8_t state;
-};
 
-
-class Emul{
+class BrickPi3{
   public:
   // Default to address 1, but the BrickPi3 address could have been changed.
-    Emul(uint8_t addr = 1);
+    BrickPi3(uint8_t addr = 1);
 
-    int runEmul();
-    int changeObstacle(); // pour l'instant c'est binaire
-    int changeButton(char butt);
   // Confirm that the BrickPi3 is connected and up-to-date
     int     detect(bool critical = true);
 
@@ -341,11 +329,10 @@ class Emul{
     uint8_t SensorType[4];
     uint8_t I2CInBytes[4];
 
-  motEmul_t motEmul[4]; // pour l'instant une seule carte BrickPi
-  int32_t codEmul[2]; // encodeurs indépendants ou intégrés au moteur
-  int sonEmul[4]; // 4 sonars, on verra
-  uint8_t touchEmul; // le touchmux (??)
-  bool buttonEmul[8]; // l'état des boutons
+    int spi_write_8(uint8_t msg_type, uint8_t value);
+    int spi_read_16(uint8_t msg_type, uint16_t &value);
+    int spi_read_32(uint8_t msg_type, uint32_t &value);
+    int spi_read_string(uint8_t msg_type, char *str, uint8_t chars = 20);
 };
 
 #endif

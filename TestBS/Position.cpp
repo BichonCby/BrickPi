@@ -11,11 +11,11 @@ float modulo180(float angle)
 }
 Position::Position()
 {
-		Conf.getConfig((char *)("COEFF_SPD_FOR"), &COEFF_SPD_FOR);
-		Conf.getConfig((char *)("COEFF_SPD_ROT"), &COEFF_SPD_ROT);
-		Conf.getConfig((char *)("COEFF_ANG"), &COEFF_ANG);
-		Conf.getConfig((char *)("COEFF_MM"), &COEFF_MM);
-		//printf("%d mon coeff est %f\n",i,COEFF_SPD_FOR); 
+	Conf.getConfig((char *)("COEFF_SPD_FOR"), &COEFF_SPD_FOR);
+	Conf.getConfig((char *)("COEFF_SPD_ROT"), &COEFF_SPD_ROT);
+	Conf.getConfig((char *)("COEFF_ANG"), &COEFF_ANG);
+	Conf.getConfig((char *)("COEFF_MM"), &COEFF_MM);
+	//printf("%d mon coeff est %f\n",i,COEFF_SPD_FOR); 
 }
 
 int Position::initPosition(void) // voir si on l'intègre dans le constructeur
@@ -24,6 +24,10 @@ int Position::initPosition(void) // voir si on l'intègre dans le constructeur
 }
 int Position::calcPosition() // fonction récurrente
 {
+	Conf.getConfig((char *)("COEFF_SPD_FOR"), &COEFF_SPD_FOR);
+	Conf.getConfig((char *)("COEFF_SPD_ROT"), &COEFF_SPD_ROT);
+	Conf.getConfig((char *)("COEFF_ANG"), &COEFF_ANG);
+	Conf.getConfig((char *)("COEFF_MM"), &COEFF_MM);
 	// récupération des codeurs
 	Sen.getEncoder(&posWhlR, &posWhlL);  
 	// calcul des deltas et mémorisation
@@ -45,6 +49,8 @@ int Position::calcPosition() // fonction récurrente
 	
 	// calcul de la position
 	float deltaAng = (float) (deltaPosWhlR-deltaPosWhlL)*COEFF_ANG;
+	if (Rob.isOpposite()) // on est de l'autre côté
+		deltaAng = -deltaAng;
 	posAlpha = modulo180(posAlpha + deltaAng);
 	
 	float deltaX = (float)(deltaPosWhlR+deltaPosWhlL);

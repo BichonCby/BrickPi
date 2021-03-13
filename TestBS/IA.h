@@ -6,9 +6,13 @@ class IA{
 public:
 IA(void); // constructeur
 int launchIA(); 
-
+char getMicroStep();
+char getMacroStep();
 private:
+char microStep;
+char macroStep;
 void DoSquare();
+void DoLineTurn();
 void DoNothing(int t);
 void StopSec(float ts);
 };

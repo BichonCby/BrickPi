@@ -28,12 +28,18 @@ int Robot::initRobot()
 	Conf.getConfig((char *)"BAU_HW",&val);bauHW = (uint8_t)val;
 	Conf.getConfig((char *)"BAU_PORT",&val);bauPort = (uint8_t)val;
 	Conf.getConfig((char *)"BAU_EV3",&val);bauEV3 = (uint8_t)val;
+	Conf.getConfig((char *)"COLOR_HW",&val);colorHW = (uint8_t)val;
+	Conf.getConfig((char *)"COLOR_PORT",&val);colorPort = (uint8_t)val;
+	Conf.getConfig((char *)"COLOR_EV3",&val);colorEV3 = (uint8_t)val;
+
+	Conf.getConfig((char *)"ARM_PORT",&val);motArm = (uint8_t)val;
 
 	Conf.getConfig((char *)"INIT_POS_X",&val);initPosX = (int)val;
 	Conf.getConfig((char *)"INIT_POS_Y",&val);initPosY = (int)val;
 	Conf.getConfig((char *)"INIT_POS_A",&val);initPosA = (int)val;
 	
-	color = GREEN; // sera à lire sur le contacteur
+	color = BLUE; // sera à lire sur le contacteur
+	color = YELLOW;
 	stateMatch = MATCH_PREPARE;
 	typeMatch = TYPE_NORMAL;
 	//score = 0;
@@ -52,6 +58,10 @@ int Robot::setColor(int c)
 {
 	color = c;
 	return 0;
+}
+bool Robot::isOpposite()
+{
+	return (getColor() == YELLOW);
 }
 uint8_t Robot::getScore()
 {

@@ -79,9 +79,9 @@ int Remote::decodeFrame()
 	int itmp1, itmp2;
 	char ctmp1,ctmp2,ctmp3;
 	char name[50];
-//	for (int j=0;j<sizeRead;j++)
-//		printf("%x ",strRead[j]);
-//	printf("\n");
+	//for (int j=0;j<sizeRead;j++)
+		//printf("%x ",strRead[j]);
+	//printf("\n");
 	if (sizeRead <3 || strRead[2] != Rob.getVersion())
 	{
 		printf("mauvaise taille %d ou version\n",sizeRead);
@@ -135,6 +135,7 @@ int Remote::decodeFrame()
 					Ass.manualPower(itmp1,itmp2); // voir comment on récupère la vitesse
 					break;
 				case 'S': // stop robot
+					printf("stop1\n");
 					Ass.stopRobot();
 					break;
 				default :
@@ -182,7 +183,14 @@ int Remote::decodeFrame()
 			}
 			encodeFrame(ID_ACK);
 			break;
-		case ID_OBSTACLE :
+		case ID_BUTTON : // n'a de sens qu'en emulation
+#ifdef EMULATOR
+			printf("bouton %c\n",strRead[3]);
+			BP.changeButton(strRead[3]);
+#endif
+			encodeFrame(ID_ACK);
+			break;
+		case ID_OBSTACLE : // n'a de sens qu'en emulation
 #ifdef EMULATOR
 			printf("obstacle change\n");
 			BP.changeObstacle();
@@ -255,7 +263,7 @@ int Remote::encodeFrame(char id, char err)
 			// ...
 			sizeWrite = strWrite[1]+4;
 			Pos.getPosition(&valf1,&valf2,&valf3);
-			printf("pos (X,Y,A) = %d %d %d\n",(int)valf1, (int)valf2, (int)valf3);
+			//printf("pos (X,Y,A) = %d %d %d\n",(int)valf1, (int)valf2, (int)valf3);
 			//printf("posX pf %d\n",strWrite[3]);
 			//printf("posX pF %d\n",strWrite[4]);
 			break;
@@ -264,7 +272,7 @@ int Remote::encodeFrame(char id, char err)
 			strWrite[1] = 13;// taille utile
 			strWrite[2] = Rob.getVersion();
 			Ass.getTarget(&valf1,&valf2,&valf3,&vali1);
-			printf("asser %d x = %d y = %d a = %d ",(int)vali1,(int)valf1,(int)valf2,(int)valf3);
+			//printf("asser %d x = %d y = %d a = %d ",(int)vali1,(int)valf1,(int)valf2,(int)valf3);
 			strWrite[3] = (char) (vali1); // type de déplacement
 			strWrite[4] = (char) ((int)valf1 & 0x00FF); // tar X poids faible
 			strWrite[5] = (char) (((int)valf1)>>8 & 0x00FF); // tar X poids fort
@@ -279,7 +287,7 @@ int Remote::encodeFrame(char id, char err)
 			strWrite[12] = (char) ((int)valf2 & 0x00FF); // vit rot pf
 			strWrite[13] = (char) (((int)valf2)>>8 & 0x00FF); // vit rot PF
 			strWrite[14] = (char) (Ass.isConverge()); // convergence
-			printf("conv %d detect %d\n",(int)Ass.isConverge(),(int)Det.isObstacle());
+			//printf("conv %d detect %d\n",(int)Ass.isConverge(),(int)Det.isObstacle());
 			strWrite[15] = (char) (Ass.isBlocked()); // blocage
 			strWrite[16] = checkSum();
 			sizeWrite = strWrite[1]+4;
@@ -318,7 +326,7 @@ int Remote::encodeFrame(char id, char err)
 			break;
 			
 		case ID_ROBOT :
-			printf("Robot.\n");
+			//printf("Robot.\n");
 			strWrite[0] = ID_ROBOT;
 			strWrite[1] = 5;// taille utile 
 			strWrite[2] = Rob.getVersion();
@@ -331,6 +339,15 @@ int Remote::encodeFrame(char id, char err)
 			strWrite[9] = checkSum();
 			sizeWrite = strWrite[1]+4;
 			//printf("count : %.2f s score = %d\n",(float)(Rob.getCounter())/50,(char)(Rob.getScore()));
+			break;
+		case ID_IA :
+			strWrite[0] = ID_IA;
+			strWrite[1] = 2;// taille utile 
+			strWrite[2] = Rob.getVersion();
+			strWrite[3] = (char) (MyIA.getMacroStep()); // macro step 
+			strWrite[4] = (char) (MyIA.getMicroStep()); // micro step
+			strWrite[5] = checkSum();
+			sizeWrite = strWrite[1]+4;
 			break;
 		case ID_CALGET : // récupération de la calibration demandée
 			printf("calib %f\n",calibf);

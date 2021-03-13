@@ -13,6 +13,7 @@
 #define ID_CALGET 0x0B
 //#define ID_CALWRITE 0x0C
 #define ID_PARAM 0x0D
+#define ID_BUTTON		0x0E
 #define ID_POSITION 0x10
 #define ID_ASSERV 0x11
 #define ID_ROBOT 0x12

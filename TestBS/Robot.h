@@ -2,10 +2,10 @@
 #define __Robot_h__
 #define DURATION_MATCH 5000 // en 20 ms
 
-#define GREEN 0
-#define BLUE 1
+#define BLUE 0
+#define YELLOW 1
 #define RED 2
-#define YELLOW 3
+#define GREEN 3
 #define PURPLE 4
 #define BLACK 5
 #define WHITE 6
@@ -28,15 +28,18 @@
 
 #define TIRETTE Sen.getTouch(BUTTON_TIRETTE)
 #define BAU Sen.getTouch(BUTTON_BAU)
+#define COLOR Sen.getTouch(BUTTON_COLOR)
 //#define BAU false
 
 #define BUTTON_TIRETTE 0
 #define BUTTON_BAU 1
+#define BUTTON_COLOR 2
 
 class Robot{
 public:
 Robot(void); // constructeur
 int getColor();// 
+bool isOpposite();
 int setColor(int color);
 uint8_t getScore();
 uint8_t setScore(int s);
@@ -68,6 +71,10 @@ uint8_t tiretteEV3;
 uint8_t bauHW;
 uint8_t bauPort;
 uint8_t bauEV3;
+uint8_t colorHW;
+uint8_t colorPort;
+uint8_t colorEV3;
+uint8_t motArm; // le port du moteur du bras
 int initPosX;
 int initPosY;
 int initPosA;

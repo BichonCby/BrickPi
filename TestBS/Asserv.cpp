@@ -16,6 +16,12 @@ Asserv::Asserv()
 
 int Asserv::calcAsserv()
 {
+	Conf.getConfig((char *)("KP_FOR"), &KP_FOR);
+	Conf.getConfig((char *)("KP_ROT"), &KP_ROT);
+	Conf.getConfig((char *)("ANGLE_CONVERGE"), &ANGLE_CONVERGE);
+	Conf.getConfig((char *)("DIST_CONVERGE"), &DIST_CONVERGE);
+	Conf.getConfig((char *)("DPSROB_TO_DPSWHL"), &DPSROB_TO_DPSWHL);
+	Conf.getConfig((char *)("MMSROB_TO_DPSWHL"), &MMSROB_TO_DPSWHL);
 	generateVirtualSpeed();
 	//printf("type asserv %d\n",typeAss);
 	driveWheels();
@@ -113,7 +119,8 @@ void Asserv::generateVirtualSpeed(void)
 	speedForReq = fmaxf(fminf(speedForReq,speedForMax),-speedForMax);
 	speedRotReq = fmaxf(fminf(speedRotReq,speedRotMax),-speedRotMax);
 	//return;
-	
+	if (Rob.isOpposite())
+		speedRotReq = -speedRotReq;
 	// détermination de la convergence
 	if (  (typeAss == ASS_NUL)
 		||(typeAss == ASS_POLAR && abs(distance) < DIST_CONVERGE)
@@ -137,8 +144,8 @@ void Asserv::driveWheels(void)
 	{
 		case ASS_NUL :
 		default :
-			Mot.setMotorSpeed(Rob.whlLeft,0);
-			Mot.setMotorSpeed(Rob.whlRight,0);
+			//Mot.setMotorSpeed(Rob.whlLeft,0);
+			//Mot.setMotorSpeed(Rob.whlRight,0);
 			Mot.setMotorPower(Rob.whlLeft,0);
 			Mot.setMotorPower(Rob.whlRight,0);
 			break;
@@ -200,6 +207,7 @@ int Asserv::goForward(int x, int y, int speed)
 		return 1;
 	while (!Rob.getSeqRun()); // on atend le pas de calcul suivant
 	while (Rob.getSeqRun()); // on atend la fin de la séquence
+	converge = false;
 	targetX = x;
 	targetY = y;
 	typeAss = ASS_POLAR;
@@ -244,6 +252,8 @@ int Asserv::turn(int a, int speed)
 	while (Rob.getSeqRun()); // on atend la fin de la séquence
 	printf("rotation\n");
 	targetA = (float)a;
+	//if (Rob.isOpposite())
+	//	targetA = -targetA;
 	typeAss = ASS_ROTATION;
 	speedRotMax = (float)speed;
 	speedForMax = 30; // il faudra mettre une calibration
@@ -299,6 +309,7 @@ int Asserv::manualPower(int powerRight, int powerLeft)
 
 int Asserv::stopRobot()
 {
+	printf("stop demandé\n");
 	typeAss = ASS_NUL;
 	speedLeftMan =0; // utile?
 	speedRightMan = 0; // utile?

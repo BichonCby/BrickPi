@@ -39,6 +39,7 @@ void *stopstart( void*)
     printf("tirette\n");
     while (TIRETTE)
     {
+        Rob.setColor(COLOR); // on met à jour la couleur uniquement avant la tirette
         sleepms(100); // boucle 100ms
     }
     Rob.setStateMatch(MATCH_IN_PROGRESS);

@@ -34,9 +34,17 @@ Sensors::Sensors()
 		else
 			BP.set_sensor_type(1 << (Rob.bauPort-1),SENSOR_TYPE_TOUCH);
 	}
+	if (Rob.colorHW == HW_BUTTON_BP){ // si la couleur est un port BP
+		if (Rob.colorEV3)
+			BP.set_sensor_type(1 << (Rob.colorPort-1),SENSOR_TYPE_TOUCH_EV3);
+		else
+			BP.set_sensor_type(1 << (Rob.colorPort-1),SENSOR_TYPE_TOUCH);
+	}
 	setTouchType(BUTTON_TIRETTE,Rob.tiretteHW,Rob.tirettePort);
 //	printf("tirette %d type %d port %d\n",BUTTON_TIRETTE,Rob.tiretteHW,Rob.tirettePort);
 	setTouchType(BUTTON_BAU,Rob.bauHW,Rob.bauPort);
+//	printf("BAU %d type %d port %d\n",BUTTON_BAU,Rob.bauHW,Rob.bauPort);
+	setTouchType(BUTTON_COLOR,Rob.colorHW,Rob.colorPort);
 //	printf("BAU %d type %d port %d\n",BUTTON_BAU,Rob.bauHW,Rob.bauPort);
 }
 
@@ -52,7 +60,7 @@ bool Sensors::getTouch(int id)
 	sensor_touch_t btn;
 	if (button[id].type == HW_BUTTON_BP)
 	{
-	//	printf("bouton %d\n",id);
+		//printf("bouton %d\n",id);
 		BP.get_sensor((1 << (button[id].port-1)),&btn);
 		return btn.pressed;
 	}

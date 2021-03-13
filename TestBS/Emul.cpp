@@ -11,7 +11,7 @@ Emul::Emul(uint8_t addr){
   Address = addr;
   for (int i=0;i<4;i++)
   {
-    motEmul[i].posit ion = 0;
+    motEmul[i].position = 0;
     motEmul[i].power = 0;
     motEmul[i].speed = 0;
     motEmul[i].state = 0; //ah bon?
@@ -20,6 +20,9 @@ Emul::Emul(uint8_t addr){
   codEmul[1] = 0;
   codEmul[2] = 0;
   touchEmul = 0;
+  for (int i=0;i<8;i++)
+    buttonEmul[i] = false;
+  buttonEmul[0] = true; // la tirette
   
 }
 
@@ -54,6 +57,26 @@ int Emul::changeObstacle()
         sonEmul[i] = 255-i;
       else
         sonEmul[i] = 0;
+    }
+    return 0;
+}
+
+int Emul::changeButton(char butt)
+{
+    // on change l'état du bouton
+    switch (butt)
+    {
+        case 'T': //tirette
+          buttonEmul[0] = !buttonEmul[0];printf("T %d\n",buttonEmul[0]);
+          break;
+        case 'B': //BAU
+          buttonEmul[1] = !buttonEmul[1];printf("B %d\n",buttonEmul[1]);
+          break;
+        case 'C': //couleur
+          buttonEmul[2] = !buttonEmul[2];printf("C %d\n",buttonEmul[2]);
+         break;
+        default :
+          return -1;
     }
     return 0;
 }
@@ -153,6 +176,19 @@ int Emul::get_sensor(uint8_t port, void *value_ptr){
       sensor_ultrasonic_t *Value = (sensor_ultrasonic_t*)value_ptr;
       Value->cm = sonEmul[rev(port)]; //pour l'instant
   }
+  if (SensorType[port] == SENSOR_TYPE_TOUCH || SensorType[port] == SENSOR_TYPE_TOUCH_EV3)
+  {
+    //printf("get sensor %d type %d et %d %d\n",port,SensorType[port],(1 << (Rob.tirettePort-1)),(1 << (Rob.bauPort-1)));
+    // Attention, si deux ports sont identiques, c'est le bordel
+      sensor_touch_t *Value = (sensor_touch_t*)value_ptr;
+      if (port == (1 << (Rob.tirettePort-1)))
+          Value->pressed = buttonEmul[0];
+      if (port == (1 << (Rob.bauPort -1)))
+          Value->pressed = buttonEmul[1];
+      if (port == (1 << (Rob.colorPort-1)))
+          Value->pressed = buttonEmul[2];
+  }
+  
   // Get some commonly used values
 /*  uint8_t  raw_value_8 = spi_array_in[6];
   uint16_t raw_value_16 = ((spi_array_in[6] << 8) | spi_array_in[7]);
