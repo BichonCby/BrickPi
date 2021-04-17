@@ -53,6 +53,8 @@ void *stopstart( void*)
     printf("Fin du match\n");
     Rob.setStateMatch(MATCH_DISPLAY); // en fait ça sera funny ou display
     Ass.stopRobot();
+    sleepms(100);
+    Ass.stopRobot(); // pour être sûr
     return NULL;
 }
 sensor_ultrasonic_t sonar;

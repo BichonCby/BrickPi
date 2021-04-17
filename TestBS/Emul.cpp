@@ -1,7 +1,7 @@
 
 //#include "Emul.h"
 #include "mainBS.h"
-#undef EMULATOR
+//#undef EMULATOR
 #ifdef EMULATOR
 // pour donner le num (0 3) en fonction du port(0x01 0x08)
 #define   rev(port) (port==1)?0:((port==2)?1:((port==4)?2:3))

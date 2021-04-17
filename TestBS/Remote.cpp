@@ -76,7 +76,7 @@ int Remote::decodeFrame()
 {
 	float ftmp1;
 	//float ftmp2;
-	int itmp1, itmp2;
+	int itmp1, itmp2, itmp3;
 	char ctmp1,ctmp2,ctmp3;
 	char name[50];
 	//for (int j=0;j<sizeRead;j++)
@@ -143,6 +143,15 @@ int Remote::decodeFrame()
 					return -1*(int)ERR_BAD_MOVE;
 					break;
 			}
+			encodeFrame(ID_ACK);
+			break;
+		case ID_ORDERPOS : // on donne un ordre de positionnement 
+			printf("ordre pos reçu\n");
+			Rob.setTypeMatch(TYPE_REMOTE); // si on donne un ordre, on prend la main
+			itmp1 = (int16_t)((int)strRead[3] + ((int)(strRead[4]))*256);
+			itmp2 = (int16_t)((int)strRead[5] + ((int)(strRead[6]))*256);
+			itmp3 = (int16_t)((int)strRead[7] + ((int)(strRead[8]))*256);
+			Pos.setPosition((float)itmp1,(float)itmp2,(float)itmp3);
 			encodeFrame(ID_ACK);
 			break;
 		case ID_PARAM : // on va demander un truc sur la calibration

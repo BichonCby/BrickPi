@@ -4,8 +4,8 @@ A coder
 log
 Passer les unités de rotation en 0.1°/s pour les transferts pipe??
 bouton pour lancer le match, ou le relancer
-ordre de changement de position
-
+//ordre de changement de position
+nommage du fichier de config avec la date sur 2 chiffres
 
 A tester
 

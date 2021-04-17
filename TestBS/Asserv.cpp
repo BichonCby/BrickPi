@@ -8,9 +8,9 @@ Asserv::Asserv()
 	Conf.getConfig((char *)("KP_ROT"), &KP_ROT);
 	Conf.getConfig((char *)("ANGLE_CONVERGE"), &ANGLE_CONVERGE);
 	Conf.getConfig((char *)("DIST_CONVERGE"), &DIST_CONVERGE);
+	Conf.getConfig((char *)("DIST_CONVERGE_PATH"), &DIST_CONVERGE_PATH);
 	Conf.getConfig((char *)("DPSROB_TO_DPSWHL"), &DPSROB_TO_DPSWHL);
 	Conf.getConfig((char *)("MMSROB_TO_DPSWHL"), &MMSROB_TO_DPSWHL);
-	
 	
 }
 
@@ -20,6 +20,7 @@ int Asserv::calcAsserv()
 	Conf.getConfig((char *)("KP_ROT"), &KP_ROT);
 	Conf.getConfig((char *)("ANGLE_CONVERGE"), &ANGLE_CONVERGE);
 	Conf.getConfig((char *)("DIST_CONVERGE"), &DIST_CONVERGE);
+	Conf.getConfig((char *)("DIST_CONVERGE_PATH"), &DIST_CONVERGE_PATH);
 	Conf.getConfig((char *)("DPSROB_TO_DPSWHL"), &DPSROB_TO_DPSWHL);
 	Conf.getConfig((char *)("MMSROB_TO_DPSWHL"), &MMSROB_TO_DPSWHL);
 	generateVirtualSpeed();
@@ -36,6 +37,9 @@ void Asserv::generateVirtualSpeed(void)
 	float deltax = targetX - curX;
 	float deltay = targetY - curY;
 	float distance = sqrtf(deltax*deltax + deltay*deltay);
+	float deltaxpath = path.pt[idxpath].x - curX;
+	float deltaypath = path.pt[idxpath].y - curY;
+	float distancepath = sqrtf(deltaxpath*deltaxpath + deltaypath*deltaypath);
 	float absAngle, deltaAngle;
 	// calcul des deltas en distance et en angle selon le type
 	switch (typeAss)
@@ -87,6 +91,18 @@ void Asserv::generateVirtualSpeed(void)
 			}
 			
 			break;
+		case ASS_PATHBACK:
+			distance = -distance; 
+			// pas de break, c'est volontaire
+		case ASS_PATHFOR :
+			// on ne va pas très près dui point, donc pas besoin de se prendre la tête
+			// avec le calcul de l'angle à proximité
+			absAngle = modulo180(RAD2DEG*asinf(deltaypath/distancepath));
+			if (path.pt[idxpath].x < curX)
+				absAngle = 180-absAngle;
+			deltaAngle = modulo180(absAngle-curA);
+			//printf("distance = %f angle = %f, path = %d %f %f\n",distance,deltaAngle, idxpath, distancepath,deltaypath);
+			break;
 		case ASS_ROTATION :
 		case ASS_PIVOT :
 			deltaAngle = modulo180(targetA-curA);
@@ -125,6 +141,8 @@ void Asserv::generateVirtualSpeed(void)
 	if (  (typeAss == ASS_NUL)
 		||(typeAss == ASS_POLAR && abs(distance) < DIST_CONVERGE)
 		||(typeAss == ASS_POLARREV && abs(distance) < DIST_CONVERGE)
+		||(typeAss == ASS_PATHFOR && abs(distance) < DIST_CONVERGE)
+		||(typeAss == ASS_PATHBACK && abs(distance) < DIST_CONVERGE)
 		||(typeAss == ASS_ROTATION && abs(deltaAngle) < ANGLE_CONVERGE)
 		)
 	{
@@ -135,6 +153,15 @@ void Asserv::generateVirtualSpeed(void)
 	}
 	else
 		converge = false;
+		
+	// détermination du passage au point suivant du path
+	if ((typeAss == ASS_PATHBACK || typeAss == ASS_PATHFOR)
+		&& distancepath <  DIST_CONVERGE_PATH
+		&& idxpath < path.nbPt-1)
+		{
+			idxpath = idxpath+1;
+			printf("new path %d %d %d\n",idxpath, path.pt[idxpath].x,path.pt[idxpath].y);
+		}
 }
 
 void Asserv::driveWheels(void)
@@ -144,8 +171,8 @@ void Asserv::driveWheels(void)
 	{
 		case ASS_NUL :
 		default :
-			//Mot.setMotorSpeed(Rob.whlLeft,0);
-			//Mot.setMotorSpeed(Rob.whlRight,0);
+			Mot.setMotorSpeed(Rob.whlLeft,0);
+			Mot.setMotorSpeed(Rob.whlRight,0);
 			Mot.setMotorPower(Rob.whlLeft,0);
 			Mot.setMotorPower(Rob.whlRight,0);
 			break;
@@ -160,6 +187,8 @@ void Asserv::driveWheels(void)
 		case ASS_POLAR:
 		case ASS_POLARREV:
 		case ASS_ROTATION:
+		case ASS_PATHBACK:
+		case ASS_PATHFOR :
 		case ASS_CIRCLE:
 			// roue droite
 			tmp = (speedForReq*MMSROB_TO_DPSWHL+speedRotReq*DPSROB_TO_DPSWHL); // en dps roue
@@ -307,6 +336,56 @@ int Asserv::manualPower(int powerRight, int powerLeft)
 	return 0;
 }
 
+int Asserv::followPathForward(int speed)
+{
+	idxpath=0; // on réinitialise le chemin
+	// mettre un sémaphore
+	if (Rob.getTypeMatch() != TYPE_REMOTE && Rob.getStateMatch() >= MATCH_FUNNY)
+		return 1;
+	while (!Rob.getSeqRun()); // on atend le pas de calcul suivant
+	while (Rob.getSeqRun()); // on atend la fin de la séquence
+	converge = false;
+	targetX = path.pt[path.nbPt-1].x;
+	targetY = path.pt[path.nbPt-1].y;
+	typeAss = ASS_PATHFOR;
+	speedForMax = speed;
+	speedRotMax = 90; // il faudra mettre une calibration
+	sleepms(20); // pour être sûr que c'est pris en compte
+	printf("path en cours\n");
+	while (!isConverge() && !Det.isObstacle() 
+			&& Rob.getTypeMatch() != TYPE_REMOTE
+			&& Rob.getStateMatch() < MATCH_FUNNY) // on arrete de bouger à la funny
+		sleepms(20);
+	printf("fin du path\n");
+	if (Det.isObstacle())
+		return -1; // détection
+	return 0;
+}	
+
+int Asserv::followPathBackward(int speed)
+{
+	int idx=0;
+	// mettre un sémaphore
+	if (Rob.getTypeMatch() != TYPE_REMOTE && Rob.getStateMatch() >= MATCH_FUNNY)
+		return 1;
+	while (!Rob.getSeqRun()); // on atend le pas de calcul suivant
+	while (Rob.getSeqRun()); // on atend la fin de la séquence
+	converge = false;
+//	targetX = x;
+//	targetY = y;
+	typeAss = ASS_PATHBACK;
+	speedForMax = speed;
+	speedRotMax = 90; // il faudra mettre une calibration
+	sleepms(20); // pour être sûr que c'est pris en compte
+	while (!isConverge() && !Det.isObstacle() 
+			&& Rob.getTypeMatch() != TYPE_REMOTE
+			&& Rob.getStateMatch() < MATCH_FUNNY) // on arrete de bouger à la funny
+		sleepms(20);
+	if (Det.isObstacle())
+		return -1; // détection
+	return 0;
+}	
+
 int Asserv::stopRobot()
 {
 	printf("stop demandé\n");
@@ -380,4 +459,23 @@ float carto(float x, float *axe, float *val)
 		}
 	}
 	return 0;//impossible
+}
+
+int Asserv::setPath(int *x, int *y, int n)
+{
+	int i;
+	if (n<1 || n> NB_POINTS_MAX_PATH)
+		return -1;
+	for (i=0;i<n;i++)
+	{
+		path.pt[i].x=x[i];
+		path.pt[i].y=y[i];
+		path.nbPt = n;
+	}
+	for (i=n;i<NB_POINTS_MAX_PATH;i++)
+	{
+		path.pt[i].x=0;
+		path.pt[i].y=0;
+	}
+	return 0;
 }

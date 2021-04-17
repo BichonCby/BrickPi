@@ -10,6 +10,19 @@
 #define ASS_PIVOT 6
 #define ASS_CIRCLE 7
 #define ASS_BLOCK 10
+#define ASS_PATHFOR 20
+#define ASS_PATHBACK 21
+
+#define NB_POINTS_MAX_PATH 50
+struct point_t{
+  int16_t  x;
+  int16_t  y;
+};
+struct path_t{
+	struct point_t pt[NB_POINTS_MAX_PATH];
+	int nbPt;
+	int spd;
+};
 
 // défintion de la classe
 class Asserv{
@@ -24,6 +37,10 @@ int pivot(uint8_t blkWhl,uint8_t dir, int angle);
 int manualSpeed(int spdRight, int spdLeft);
 int manualPower(int powerRight, int powerLeft);
 int stopRobot(); // pour demander un déplacement nul
+int followPathForward(int speed);
+int followPathBackward(int speed);
+// Fonctions de gestion du path
+int setPath(int *x, int *y, int n);
 // accesseurs
 float getSpeedForReq();
 int getTarget(float *tarX,float *tarY, float *tarA, int *typ); 
@@ -33,6 +50,7 @@ bool isBlocked(); // indique un blocage confirmé du robot
 private:
 // Calibration qui seront lues dans le fichier de config
 float DIST_CONVERGE = 10; // en mm
+float DIST_CONVERGE_PATH = 30; // en mm
 float ANGLE_CONVERGE = 10; // en degré
 float KP_FOR = 1;
 float KP_ROT = 1;
@@ -60,7 +78,8 @@ bool converge;
 bool blocked;
 int cntBlock;
 uint8_t blockedWhl;
-
+struct path_t path;
+int idxpath; // l'index en cours dans le chemin parcouru
 };
 
 #endif

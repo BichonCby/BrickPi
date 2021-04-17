@@ -1,8 +1,8 @@
 #ifndef __MainBS_h__
 #define __MainBS_h__
 
-//#define EMULATOR 
-#undef EMULATOR
+#define EMULATOR 
+//#undef EMULATOR
 
 #include <iostream>
 #include <pthread.h>
@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <math.h>
 #include <wiringPi.h>
+#include <math.h>
+#include <algorithm>
 
 #include "Config.h"
 #include "Utils.h"
@@ -28,6 +30,7 @@
 #include "Action.h"
 #include "Remote.h"
 #include "Detection.h"
+#include "AStar.h"
 
 #ifdef EMULATOR
 extern Emul BP;

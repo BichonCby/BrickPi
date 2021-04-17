@@ -12,6 +12,7 @@ private:
 char microStep;
 char macroStep;
 void DoSquare();
+void doPath();
 void DoLineTurn();
 void DoNothing(int t);
 void StopSec(float ts);

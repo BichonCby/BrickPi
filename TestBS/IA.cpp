@@ -12,7 +12,10 @@ int IA::launchIA()
 	//DoNothing(5000);
 	//Act.CloseArm();
 	//DoNothing(5000);
-	DoLineTurn();
+	doPath();
+	//DoLineTurn();
+	//doPath();
+	printf("fin IA\n");
 	return 0;
 	DoSquare();printf("1\n");
 	DoNothing(5000);
@@ -78,6 +81,42 @@ void IA::DoLineTurn()
 	while (Ass.turn(90,100)==-1)
 		StopSec(2.0);
 }
+void IA::doPath()
+{
+	int myx[50];// = {300,700,800};
+	int myy[50];// = {1100,1000,1200};
+
+	AStar::Generator generator;
+    generator.setWorldSize({30, 21}); // tous les 10cm pour l'instant
+    generator.setHeuristic(AStar::Heuristic::euclidean);
+    generator.setDiagonalMovement(true);
+    generator.addCollision({8,11});
+    generator.addCollision({8,11});
+    generator.addCollision({8,11});
+    //generator.addCollision({1,2});
+    //generator.addCollision({3,2});
+    //generator.addCollision({1,3});
+    //generator.addCollision({2,3});
+    //generator.addCollision({3,3});
+    
+    std::cout << "Generate path ... \n";
+    auto path = generator.findPath({10, 11}, {2, 11});// la fin puis le début, à inverser plus tard
+	int i=0;
+    for(auto& coordinate : path) {
+		myx[i] = 100*coordinate.x;
+		myy[i] = 100*coordinate.y;
+		i++;
+        std::cout << coordinate.x << " " << coordinate.y << "\n";
+    }
+
+	macroStep++;
+	microStep=0;
+	Ass.setPath(myx,myy,i);
+	while (Ass.followPathForward(50)==-1)
+		StopSec(2.0);
+	return;
+}
+
 void IA::DoNothing(int t)
 {
 	sleepms(t);
